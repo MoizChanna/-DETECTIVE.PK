@@ -1827,6 +1827,7 @@ const G={
       hintsUsed:0,hintsLeft:3,
       startTime:Date.now(),elapsed:0,timer:null
     };
+    shuffleSuspects(c);
     c.suspects.forEach(s=>{this.cs.stresses[s.id]=s.stress;this.cs.askedQs[s.id]=new Set()});
     this.buildBriefing(c);this.show('s-brief');
   },
@@ -2250,6 +2251,10 @@ const G={
 function openM(id){document.getElementById(id).classList.add('open')}
 function closeM(id){document.getElementById(id).classList.remove('open');Audio.click()}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function shuffleSuspects(c){
+  const a=c.suspects;
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+}
 function toast(msg,type='info',dur=3200){
   const c=document.getElementById('toasts'),t=document.createElement('div');
   t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);
