@@ -306,6 +306,162 @@ body:hover #cur .ring{width:28px;height:28px}
 /* Hint charge dots */
 .hint-dots{font-size:11px;margin-left:4px;color:var(--amber)}
 
+/* ══════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — max-width 768px
+═══════════════════════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* Hide desktop cursor on touch */
+  #cur{display:none}
+  *{cursor:auto!important}
+
+  /* ── BOOT ── */
+  .boot-logo{font-size:32px;letter-spacing:4px}
+  .boot-sub{font-size:9px;letter-spacing:2px;padding:0 16px;text-align:center}
+  .boot-lines{font-size:11px;padding:0 16px}
+  .cctv-id{font-size:9px}
+
+  /* ── ARCHIVE ── */
+  #s-archive{padding:28px 16px 40px}
+  .arch-logo{font-size:36px;letter-spacing:4px}
+  .arch-tagline{font-size:8px;letter-spacing:2px;padding:0 8px}
+  .arch-divider{margin:16px auto}
+  .cases-row{flex-direction:column;align-items:center;gap:16px}
+  .case-card{width:100%;max-width:360px;padding:22px}
+  .arch-footer{margin-top:28px;font-size:10px}
+  .arch-footer button{padding:8px 12px;font-size:9px;margin-bottom:8px}
+
+  /* ── BRIEFING ── */
+  .brief-body{grid-template-columns:1fr;overflow-y:auto}
+  .brief-col{padding:20px 18px}
+  .brief-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .brief-title{font-size:24px}
+  .brief-body-text{font-size:12px;line-height:1.8}
+  .brief-li{font-size:11px}
+  .brief-actions{flex-direction:column;padding:14px 18px;gap:10px}
+  .brief-actions .btn{width:100%;text-align:center;padding:12px}
+
+  /* ── INVESTIGATION HUD ── */
+  .inv-hud{flex-wrap:wrap;gap:8px;padding:8px 12px}
+  .hud-title{width:100%;order:-1;font-size:12px;letter-spacing:1px}
+  .hud-case{font-size:9px}
+  .hud-stat{font-size:10px}
+  .hud-btn{padding:5px 10px;font-size:9px;letter-spacing:1px}
+
+  /* ── TABS ── */
+  .inv-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+  .tab{padding:10px 14px;font-size:9px;letter-spacing:2px;display:inline-block}
+
+  /* ── CRIME SCENE ── */
+  .scene-wrap{padding:8px}
+  .scene-room{height:320px}
+  .scene-meta{flex-direction:column;align-items:flex-start;gap:2px}
+  .room-label{font-size:9px}
+  .room-found{font-size:11px}
+  .scene-tip{font-size:10px}
+  /* bigger tap targets for hotspots */
+  .hs-inner{width:44px;height:44px;font-size:20px}
+  .hs-ring{width:58px;height:58px}
+  .hs-label{font-size:9px;margin-top:32px}
+
+  /* ── EVIDENCE LOCKER ── */
+  .ev-grid{grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+  .ev-icon{font-size:26px;margin-bottom:8px}
+  .ev-name{font-size:11px}
+  .ev-tag{font-size:9px}
+
+  /* ── SUSPECTS ── */
+  .suspects-grid{grid-template-columns:1fr;gap:14px;padding:16px}
+  .sus-name{font-size:15px}
+  .sus-alibi{font-size:11px}
+  .sus-btn{padding:12px;font-size:11px}
+
+  /* ── DEDUCTION BOARD ── */
+  .board-btns{bottom:8px;right:8px;gap:6px}
+  .b-btn{padding:7px 10px;font-size:9px;letter-spacing:1px}
+  .b-card{width:90px}
+  .b-photo{width:80px;height:62px;font-size:22px}
+  .b-caption{font-size:7px}
+
+  /* ── MODALS — full screen on mobile ── */
+  .overlay{align-items:flex-end}
+  .modal{
+    width:100%!important;max-width:100%!important;
+    max-height:92vh;border-radius:0;
+    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)
+  }
+  .modal-hd{padding:14px 16px}
+  .modal-title{font-size:16px}
+  .modal-body{padding:16px}
+
+  /* Evidence inspect */
+  .ev-inspect-desc{font-size:12px}
+  .ev-inspect-analysis{font-size:11px;padding:10px 12px}
+
+  /* Interrogation — stack vertically */
+  .interr-body{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  #m-interr{height:92vh}
+  .interr-side{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:12px;
+    padding:14px 16px;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    align-items:start
+  }
+  .interr-portrait{width:72px;height:72px;font-size:22px;margin:0}
+  .interr-sname{font-size:13px;text-align:left}
+  .interr-srole{font-size:8px;text-align:left;margin-bottom:8px}
+  .ev-present-section{grid-column:1/-1}
+  .ev-pill{font-size:10px;padding:6px 8px}
+  .chat{padding:12px}
+  .msg{font-size:11px;padding:8px 12px}
+  .q-section{padding:10px}
+  .q-btn{font-size:11px;padding:10px 12px}
+  .q-locked-hint{display:block;margin-left:0;margin-top:3px}
+
+  /* Accusation modal */
+  .accuse-suspects{gap:10px}
+  .acc-sus{width:calc(50% - 5px);padding:16px 10px}
+  .acc-name{font-size:13px}
+  .ev-pick-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .ev-pick{padding:10px}
+  .ev-pick-icon{font-size:20px;margin-bottom:5px}
+  .ev-pick-name{font-size:9px}
+  .accuse-nav{flex-wrap:wrap;gap:8px}
+  .accuse-nav .btn{flex:1;text-align:center;padding:10px}
+
+  /* Verdict */
+  .verdict-scroll{padding:20px 16px}
+  .verdict-box{padding:24px 18px}
+  .verdict-stamp{font-size:30px;letter-spacing:3px;padding:6px 12px;border-width:3px}
+  .verdict-sub{font-size:12px}
+  .story-text{font-size:11px;line-height:1.8}
+  .v-stats{gap:16px}
+  .vstat-v{font-size:18px}
+  .v-btns{flex-direction:column;gap:10px}
+  .v-btns .btn{width:100%;text-align:center}
+
+  /* Toasts — full width at top */
+  #toasts{top:10px;right:10px;left:10px}
+  .toast{max-width:100%;font-size:11px;padding:10px 14px}
+
+  /* Help modal */
+  .help-ranks{grid-template-columns:1fr}
+  .help-step-title{font-size:13px}
+  .help-step-desc{font-size:11px}
+}
+
+/* ── Extra small phones (< 400px) ── */
+@media(max-width:400px){
+  .arch-logo{font-size:28px;letter-spacing:2px}
+  .boot-logo{font-size:26px}
+  .case-card{padding:18px}
+  .acc-sus{width:100%}
+  .ev-pick-grid{grid-template-columns:1fr}
+}
+
 /* ── HELP MODAL ── */
 #m-help{width:700px}
 .help-intro{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px;padding:14px 18px;background:var(--ghost);border-left:3px solid var(--amber)}
@@ -994,6 +1150,9 @@ const Board={
     this.svg=document.getElementById('board-svg');
     document.addEventListener('mousemove',e=>this.mv(e));
     document.addEventListener('mouseup',()=>this.up());
+    // Touch support
+    document.addEventListener('touchmove',e=>{if(this.drag){e.preventDefault();this.mv(e.touches[0])}},{passive:false});
+    document.addEventListener('touchend',()=>this.up());
   },
   clear(){this.cards.forEach(c=>c.el.remove());this.cards.clear();this.strings=[];this.svg.innerHTML='';this.connecting=false;this.first=null;this._laid=false;document.getElementById('btn-conn').classList.remove('on')},
   add(item,type){
@@ -1002,7 +1161,9 @@ const Board={
     el.style.left='-999px';el.style.top='-999px';
     const photo=type==='ev'?`<div class="b-photo" style="font-size:26px">${item.icon||'🔍'}</div>`:`<div class="b-photo" style="font-family:'Playfair Display',serif;font-size:22px;color:var(--cream)">${item.initials}</div>`;
     el.innerHTML=`<div class="b-pin"></div><div class="b-card-inner">${photo}<div class="b-caption">${item.name.substring(0,24)}</div></div>`;
-    el.addEventListener('mousedown',e=>{e.stopPropagation();if(this.connecting){this.handleConn(item.id);return}this.drag=item.id;this.ox=e.clientX-el.offsetLeft;this.oy=e.clientY-el.offsetTop;el.style.zIndex=20});
+    const startDrag=(cx,cy)=>{this.drag=item.id;this.ox=cx-el.offsetLeft;this.oy=cy-el.offsetTop;el.style.zIndex=20};
+    el.addEventListener('mousedown',e=>{e.stopPropagation();if(this.connecting){this.handleConn(item.id);return}startDrag(e.clientX,e.clientY)});
+    el.addEventListener('touchstart',e=>{e.stopPropagation();if(this.connecting){this.handleConn(item.id);return}const t=e.touches[0];startDrag(t.clientX,t.clientY)},{passive:true});
     this.wrap.appendChild(el);
     this.cards.set(item.id,{el,type});
   },
