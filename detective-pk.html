@@ -100,6 +100,8 @@ body:hover #cur .ring{width:28px;height:28px}
 /* ── INVESTIGATION ── */
 #s-inv{background:var(--bg);overflow:hidden}
 .inv-hud{display:flex;align-items:center;gap:14px;padding:11px 20px;background:var(--ink);border-bottom:1px solid var(--border);flex-shrink:0}
+/* Row wrappers — display:contents makes them invisible to flexbox on desktop */
+.hud-row1,.hud-row2{display:contents}
 .hud-case{font-size:11px;color:var(--amber);letter-spacing:3px}
 .hud-sep{color:var(--dim)}
 .hud-title{font-family:'Special Elite',cursive;font-size:15px;color:var(--cream);flex:1;letter-spacing:2px}
@@ -332,21 +334,39 @@ body:hover #cur .ring{width:28px;height:28px}
   .arch-footer button{padding:8px 12px;font-size:9px;margin-bottom:8px}
 
   /* ── BRIEFING ── */
-  .brief-body{grid-template-columns:1fr;overflow-y:auto}
+  #s-brief{overflow-y:auto}
+  .brief-body{grid-template-columns:1fr;overflow-y:visible;height:auto}
   .brief-col{padding:20px 18px}
   .brief-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
-  .brief-title{font-size:24px}
+  .brief-title{font-size:20px;letter-spacing:3px}
   .brief-body-text{font-size:12px;line-height:1.8}
   .brief-li{font-size:11px}
   .brief-actions{flex-direction:column;padding:14px 18px;gap:10px}
   .brief-actions .btn{width:100%;text-align:center;padding:12px}
 
-  /* ── INVESTIGATION HUD ── */
-  .inv-hud{flex-wrap:wrap;gap:8px;padding:8px 12px}
-  .hud-title{width:100%;order:-1;font-size:12px;letter-spacing:1px}
-  .hud-case{font-size:9px}
-  .hud-stat{font-size:10px}
-  .hud-btn{padding:5px 10px;font-size:9px;letter-spacing:1px}
+  /* ── INVESTIGATION HUD — 2-row layout ── */
+  .inv-hud{flex-direction:column;padding:0;gap:0}
+  .hud-row1{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 12px;width:100%;
+    overflow:hidden
+  }
+  .hud-row2{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 8px 7px;width:100%;
+    border-top:1px solid rgba(232,226,212,.1);
+    overflow-x:auto;-webkit-overflow-scrolling:touch
+  }
+  .hud-row2::-webkit-scrollbar{display:none}
+  .hud-title{
+    flex:1;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-size:12px;letter-spacing:1px
+  }
+  .hud-case{font-size:9px;flex-shrink:0}
+  .hud-sep{flex-shrink:0}
+  .hud-stat{font-size:10px;white-space:nowrap;flex-shrink:0}
+  .hud-btn{padding:5px 9px;font-size:9px;letter-spacing:1px;flex-shrink:0;white-space:nowrap}
 
   /* ── TABS ── */
   .inv-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
@@ -354,10 +374,14 @@ body:hover #cur .ring{width:28px;height:28px}
 
   /* ── CRIME SCENE ── */
   .scene-wrap{padding:8px}
-  .scene-room{height:320px}
-  .scene-meta{flex-direction:column;align-items:flex-start;gap:2px}
-  .room-label{font-size:9px}
-  .room-found{font-size:11px}
+  .scene-room{height:300px}
+  /* Keep scene-meta as a single row with label truncated */
+  .scene-meta{flex-direction:row;align-items:center;flex-wrap:nowrap;gap:8px;overflow:hidden}
+  .room-label{
+    font-size:9px;letter-spacing:1px;flex:1;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+  }
+  .room-found{font-size:9px;white-space:nowrap;flex-shrink:0}
   .scene-tip{font-size:10px}
   /* bigger tap targets for hotspots */
   .hs-inner{width:44px;height:44px;font-size:20px}
@@ -433,6 +457,7 @@ body:hover #cur .ring{width:28px;height:28px}
   .accuse-nav .btn{flex:1;text-align:center;padding:10px}
 
   /* Verdict */
+  .verdict-nav-center{display:none}
   .verdict-scroll{padding:20px 16px}
   .verdict-box{padding:24px 18px}
   .verdict-stamp{font-size:30px;letter-spacing:3px;padding:6px 12px;border-width:3px}
@@ -583,15 +608,19 @@ body:hover #cur .ring{width:28px;height:28px}
 <!-- ══ INVESTIGATION ══════════════════════════════ -->
 <div id="s-inv" class="screen">
   <div class="inv-hud">
-    <button class="btn btn-outline" style="padding:5px 12px;font-size:11px;letter-spacing:2px" onclick="G.showArchive()">← FILES</button>
-    <span class="hud-case" id="hud-caseid"></span>
-    <span class="hud-sep">|</span>
-    <span class="hud-title" id="hud-title"></span>
-    <div class="hud-stat">⏱ <b id="hud-timer">00:00</b></div>
-    <div class="hud-stat">🔍 CLUES <b id="hud-clues">0/6</b></div>
-    <button class="hud-btn help" onclick="openM('m-help')">? HELP</button>
-    <button class="hud-btn hint" id="btn-hint" onclick="G.useHint()">HINT <span class="hint-dots" id="hint-dots">●●●</span></button>
-    <button class="hud-btn accuse" id="btn-accuse" onclick="G.openAccuse()" disabled>MAKE ARREST</button>
+    <div class="hud-row1">
+      <button class="btn btn-outline" style="padding:5px 12px;font-size:11px;letter-spacing:2px;flex-shrink:0" onclick="G.showArchive()">← FILES</button>
+      <span class="hud-case" id="hud-caseid"></span>
+      <span class="hud-sep">|</span>
+      <span class="hud-title" id="hud-title"></span>
+    </div>
+    <div class="hud-row2">
+      <div class="hud-stat">⏱ <b id="hud-timer">00:00</b></div>
+      <div class="hud-stat">🔍 CLUES <b id="hud-clues">0/6</b></div>
+      <button class="hud-btn help" onclick="openM('m-help')">? HELP</button>
+      <button class="hud-btn hint" id="btn-hint" onclick="G.useHint()">HINT <span class="hint-dots" id="hint-dots">●●●</span></button>
+      <button class="hud-btn accuse" id="btn-accuse" onclick="G.openAccuse()" disabled>MAKE ARREST</button>
+    </div>
   </div>
   <div class="inv-tabs">
     <div class="tab active" onclick="G.switchTab('scene',this)">CRIME SCENE</div>
