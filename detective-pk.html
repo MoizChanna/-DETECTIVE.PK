@@ -582,13 +582,36 @@ body:hover #cur .ring{width:28px;height:28px}
       <div class="case-btn open">OPEN FILE</div>
     </div>
 
-    <div class="case-card locked" id="cc003" onclick="G.lockedClick(this)">
+    <div class="case-card" id="cc003" onclick="G.openCase('C003')">
       <div class="case-num">CASE FILE 003</div>
-      <div class="case-title">The Midnight Biryani</div>
-      <div class="case-victim">VICTIM: [REDACTED]</div>
-      <div class="case-loc">Old City · Lahore</div>
-      <div class="case-btn locked-btn">🔒 LOCKED</div>
-      <div class="classified"><span>CLASSIFIED</span></div>
+      <div class="case-title">The Crimson Mehndi</div>
+      <div class="case-victim">VICTIM: Rana Tariq</div>
+      <div class="case-loc">Roshan Bagh Farmhouse · Lahore · 2026</div>
+      <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card" id="cc004" onclick="G.openCase('C004')">
+      <div class="case-num">CASE FILE 004</div>
+      <div class="case-title">The Last Guest at Pine Lodge</div>
+      <div class="case-victim">VICTIM: Justice Anwar Cheema</div>
+      <div class="case-loc">Pine Hollow Lodge · Nathia Gali · 2026</div>
+      <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card" id="cc005" onclick="G.openCase('C005')">
+      <div class="case-num">CASE FILE 005</div>
+      <div class="case-title">The Final Illusion</div>
+      <div class="case-victim">VICTIM: Sikandar Ali</div>
+      <div class="case-loc">Roxy Grand Theatre · Karachi · 2026</div>
+      <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card" id="cc006" onclick="G.openCase('C006')">
+      <div class="case-num">CASE FILE 006</div>
+      <div class="case-title">The 8:15 to Campus</div>
+      <div class="case-victim">VICTIM: Hamza Sheikh</div>
+      <div class="case-loc">Iqra Hostel, Room 214 · Karachi · 2026</div>
+      <div class="case-btn open">OPEN FILE</div>
     </div>
 
   </div>
@@ -1119,6 +1142,466 @@ C002:{
      }
     }
   ]
+},
+
+C003:{
+  id:'C003',title:'The Crimson Mehndi',
+  victim:'Rana Tariq, 58',location:'Roshan Bagh Farmhouse, Bedian Road, Lahore',
+  killerId:'khalid',
+  method:'Single blunt force blow to the skull with a brass trophy, staged as a break-in',
+  briefText:`14 February 2026. Three hundred guests. A marigold-draped shamiana. Dhol players from Multan. And at 11:10 PM, wedding planner Sobia Khan pushed open the study door to fetch the bride's father for the cake-cutting — and found Rana Tariq, 58, face-down on cold marble, a halo of dark blood spreading across the white floor. The brass trophy from his shelf was gone. The garden window hung open. Someone inside that house of music and lights picked up a four-kilo award and brought it down on the back of his skull while the dhol drowned out everything.`,
+  story:`Khalid Mahmood — Rana's business partner of twenty years — had been quietly bleeding the firm's joint account of four crores over two years. That very evening Rana discovered the shortfall and emailed his lawyer at 9:52 PM that he would "confront K tomorrow." Khalid couldn't let tomorrow come. During the loudest stretch of the dhol, he slipped from the main hall via the back garden path, struck Rana from behind with the brass trophy, threw it into the garden pond, opened the window to fake a break-in, and returned to the crowd within four minutes. What he forgot: the wet grass had clung to his formal khussas. The muddy soles contradicted every second of his alibi — and the lawyer's email had already named him.`,
+  hotspots:[
+    {id:'e1',x:'58%',y:'55%',icon:'🩸',label:'BODY POSITION',
+     name:'Police Surgeon\'s Report',tag:'FORENSIC',
+     desc:`Preliminary post-mortem filed by the medico-legal officer, Jinnah Hospital. Victim found face-down at 11:10 PM beside his desk.`,
+     analysis:`Cause of death: a single blow of blunt force to the BACK of the skull. Angle and depth are inconsistent with a fall — the victim was struck from behind by a heavy object while standing. Time of death: approximately 10:45 PM.`},
+    {id:'e2',x:'75%',y:'18%',icon:'🪟',label:'SHELF / WINDOW',
+     name:'The Empty Shelf & Open Window',tag:'PHYSICAL',
+     desc:`Crime scene notes from the study. The 4 kg brass "Businessman of the Year" trophy is absent from its shelf. The garden window is unlatched from the inside, no forced entry marks.`,
+     analysis:`The window was opened FROM THE INSIDE. No mud, no scuff, no sign of external break-in — the scene was staged by someone already in the house. The trophy was not recovered in the room and is almost certainly the murder weapon, disposed of elsewhere.`},
+    {id:'e3',x:'35%',y:'28%',icon:'📱',label:'GUEST VIDEOS',
+     name:'Three Hundred Phones',tag:'SURVEILLANCE',
+     desc:`Collected guest videos timestamped across the mehndi evening. Dozens of angles cover the dance floor from 10:30–11:00 PM at the peak dhol session.`,
+     analysis:`At 10:45 PM — the moment of murder — Bilal, the groom, is clearly visible dancing in the centre of the shamiana from 10:38 to 10:59 PM. He never leaves the frame. The crowd noise at that moment was loud enough to mask a scream from the study thirty metres away.`},
+    {id:'e4',x:'52%',y:'38%',icon:'📧',label:"VICTIM'S PHONE",
+     name:'The Lawyer\'s Email',tag:'DOCUMENT',
+     desc:`Recovered from Rana Tariq's phone, sent at 9:52 PM that night to his personal lawyer Advocate Salman Iqbal.`,
+     analysis:`Rana wrote that a forensic audit uncovered a four-crore shortfall in the firm's joint account, "siphoned over two years." He named no one directly but wrote: "Will confront K tomorrow. Don't want to ruin the wedding." Only one partner has access to that joint account.`},
+    {id:'e5',x:'20%',y:'70%',icon:'👞',label:'FOOTWEAR',
+     name:'The Muddy Khussas',tag:'PHYSICAL',
+     desc:`Footwear examined during questioning of guests at the farmhouse. A trail of wet grass and pond-edge silt runs along the back garden path from the study window to the pond.`,
+     analysis:`One guest's formal khussas carry fresh grass stains and pond silt on the soles — despite that guest insisting they "never once left the main hall all evening." The dance floor was fully carpeted and dry. The pond sits directly along the garden path that leads to the study window.`}
+  ],
+  suspects:[
+    {id:'bilal',name:'Bilal Ahmed',role:'The Groom',initials:'BA',stress:20,guilty:false,
+     alibi:'Claims he was on the dance floor all night. Guest footage confirms his presence from 10:38–10:59 PM without interruption.',
+     questions:[
+       {id:'q1',text:'You had a public argument with Rana Tariq earlier — about the dowry settlement.',
+        resp:`"Yes, we argued. Half the shaadi heard it. He wanted to change terms last minute — the night of the mehndi. I was furious." He pauses. "But we resolved it. Uncle Riaz mediated. It was done by nine. Ask him."`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'Where exactly were you at 10:45 PM?',
+        resp:`"On the dance floor. Where else? I was blowing off steam — dancing helps me think. Three hundred people saw me." He meets the detective's gaze. "Check every phone in that tent."`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'Guest footage confirms you were dancing continuously from 10:38 to 10:59 PM. You never left the frame.',
+        resp:`He exhales slowly. "Then you have your answer." A long beat. "I didn't kill my father-in-law on my own mehndi night. I want whoever did this found."`,stressAdd:3,needsEv:'e3',asked:false},
+       {id:'q4',text:'Did Rana mention anything about business troubles to you that evening?',
+        resp:`"Nothing specific. He was tense at dinner — I assumed wedding stress. He wouldn't let Khalid uncle out of his sight at one point. I noticed that." He frowns. "Ask Khalid uncle what they were discussing in that corner."`,stressAdd:5,needsEv:'e4',asked:false}
+     ],
+     evReactions:{
+       e1:`"Struck from behind. So it wasn't a fight — it was an ambush. Someone he trusted walked behind him." He goes very still.`,
+       e2:`"Opened from the inside. Someone who knew the farmhouse." He pauses. "Khalid uncle has been here for meetings for years. He knows every door in this place."`,
+       e3:`"Then I'm cleared. Good. Now use that timeline and find who left that tent at 10:45."`,
+       e4:`"K — that's Khalid. Khalid Mahmood. He and my father-in-law ran the firm together. You need to talk to him right now."`,
+       e5:`"Muddy shoes from the garden path. During a mehndi. In February." He stands straighter. "Someone used that garden to get to the study without crossing the main hall."`
+     }
+    },
+    {id:'khalid',name:'Khalid Mahmood',role:'Business Partner (20 years)',initials:'KM',stress:10,guilty:true,
+     alibi:'Insists he never left the main hall all evening and spent the night talking to investors. Cannot name all three with certainty.',
+     questions:[
+       {id:'q1',text:'When did you last see Rana Tariq alive tonight?',
+        resp:`"Around nine, nine-thirty. We spoke briefly — wedding pleasantries. He seemed distracted but in good spirits." He smooths his sherwani. "Twenty years as partners. I knew his moods."`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'Where exactly were you at 10:45 PM?',
+        resp:`"The main hall. Working the room — investors, relatives, the usual. I never once stepped out." He meets the detective's gaze steadily. "You can ask anyone."`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'Rana emailed his lawyer at 9:52 PM about a four-crore shortfall in the joint account. He wrote he would "confront K tomorrow." You are the only K with access to that account.',
+        resp:`The composure holds — but only barely. A half-second of recalibration. "K could mean many things. Rana had business with many parties." He adjusts his cuffs. "I would need to see this email myself before responding to such an accusation."`,stressAdd:35,needsEv:'e4',asked:false},
+       {id:'q4',text:'Your formal khussas have fresh grass stains and pond silt on the soles. The main hall was carpeted. The pond sits along the back garden path — the same path to the study window.',
+        resp:`A longer pause. When he speaks his voice has dropped. "I stepped outside briefly. For air. It was crowded." He does not finish the thought. His hands have gone completely still.`,stressAdd:45,needsEv:'e5',asked:false},
+       {id:'q5',text:'The window was opened from the inside. The trophy is in the garden pond. Your alibi has no corroboration. The email names you. The mud places you on that path.',
+        resp:`Eight full seconds of silence. Then, very quietly: "I would like my lawyer present. This conversation is over." He does not move. He does not look away.`,stressAdd:55,needsEv:'e2',asked:false}
+     ],
+     evReactions:{
+       e1:`"Struck from behind. Brutal." He shakes his head slowly. "Whoever did this came from behind — Rana never saw it coming." Studied grief. Perfectly timed.`,
+       e2:`"A staged window. That suggests premeditation — this wasn't a robbery." He pauses. "The trophy was significant to Rana. A gift from the industry. Whoever took it knew its weight."`,
+       e3:`"Three hundred witnesses on the dance floor. But the study is in the farmhouse wing — completely separate. Anyone could have slipped through the garden during the dhol."`,
+       e4:`He looks at the phone for a long moment. "Our accounts are complex — multi-entity structures. Figures can look alarming out of context." A careful breath. "I was going to explain everything tomorrow."`,
+       e5:`He studies the photograph of the khussas. His jaw sets. "Garden grass gets tracked everywhere at these events. The ladies were sitting outside on the lawn earlier." His voice is even. His eyes are calculating.`
+     }
+    },
+    {id:'daniyal',name:'Daniyal Tariq',role:'Estranged Son',initials:'DT',stress:30,guilty:false,
+     alibi:'His car was logged leaving the farmhouse gate at 10:25 PM — twenty minutes before the murder. Confirmed by the gate guard\'s register.',
+     questions:[
+       {id:'q1',text:'You weren\'t on the guest list. Why did you come tonight?',
+        resp:`"He was still my father." The anger is there but so is something rawer beneath it. "Two years of silence. I wanted to talk. He wouldn't look at me across the shamiana." He stares at the table. "I came anyway."`,stressAdd:18,always:true,asked:false},
+       {id:'q2',text:'What time did you leave the farmhouse?',
+        resp:`"10:25, give or take. I argued with a few relatives near the bar, gave up, and left." A bitter pause. "Check the gate guard's book. They log everything. My car is in it."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'You had clear motive — cut from the will, publicly estranged. And you were on the property.',
+        resp:`"For twenty-five minutes. Then I left — before you say he died." His voice is flat. "The gate log will prove it. I didn't get to say a single word to him. Do you understand that? Not one word."`,stressAdd:15,always:true,asked:false},
+       {id:'q4',text:'Did you see anything unusual before you left — anyone heading toward the garden path or farmhouse wing?',
+        resp:`"I was watching the study door the whole time, hoping he'd come out. But yes — Khalid Mahmood went toward the side of the house around 10:30. Toward the garden path." He looks up. "I thought he was going for air. Now I'm not sure."`,stressAdd:8,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"10:45 PM. I left at 10:25." He exhales. "I was already on Bedian Road when he was killed." He puts his head in his hands. "I never got to say goodbye."`,
+       e2:`"Opened from the inside. Someone who knows the farmhouse well." He looks up. "Khalid Mahmood has been to this property for business meetings for years. He's been in every room."`,
+       e3:`"The groom is on camera the whole time. Good." He says it without satisfaction. "Look at who isn't on camera."`,
+       e4:`"Four crores siphoned? And he was going to confront K tomorrow?" He sits forward. "K is Khalid. Is Khalid a suspect? He should be your only suspect."`,
+       e5:`"The garden path. That's exactly where I saw Khalid go at 10:30." He points at the evidence photograph. "I told you. I watched him walk that way."`
+     }
+    },
+    {id:'sobia',name:'Sobia Khan',role:'Wedding Planner',initials:'SK',stress:12,guilty:false,
+     alibi:'Was coordinating the cake-cutting from 10:30 PM onward. Multiple staff confirm her location in the shamiana. She discovered the body at 11:10 PM.',
+     questions:[
+       {id:'q1',text:'Walk me through how you found Rana Tariq.',
+        resp:`"I went to fetch him for the cake-cutting at 11:10. The study door was not fully closed." She steadies herself. "I knocked twice, then pushed it open. He was on the floor. I ran for security immediately."`,stressAdd:8,always:true,asked:false},
+       {id:'q2',text:'Did you notice anything unusual earlier in the evening — anyone near the study or the garden path?',
+        resp:`"The study light was on around 10:50 when I passed the corridor. I assumed Rana sahib was taking a call — he often stepped away from events. I should have checked then." A pause. "I've been asking myself that all night."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'You know this farmhouse better than almost anyone. Who could have reached the study unseen?',
+        resp:`"The back garden path runs from the shamiana to the farmhouse side entrance. You can reach the study without crossing the main hall at all." She pauses. "The family knows it. Khalid sahib has been here for meetings many times. He knows every corner of this property."`,stressAdd:5,always:true,asked:false},
+       {id:'q4',text:'Did you see Khalid Mahmood leave the main hall during the evening?',
+        resp:`"I was managing forty things at once. But I did notice him near the side corridor around 10:40. I thought he was looking for the bathroom." She meets the detective's eyes carefully. "I had no reason to think anything of it at the time."`,stressAdd:5,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"10:45 PM. And the dhol was at its absolute peak from 10:30 to 11:00 — that long Punjabi set. You couldn't have heard a thing from inside the farmhouse."`,
+       e2:`"Opened from the inside. The garden path connects directly to that window. If you went out that way, you'd pass the pond." She pauses. "The pond is deep in February."`,
+       e3:`"Every angle of the dance floor, and the groom is in every frame. So the killer was not on that dance floor. They had perhaps a five-minute window during the loudest music."`,
+       e4:`"Rana sahib stepped away from dinner around 9:50 — I needed his approval on the timeline and couldn't find him for ten minutes. He must have been writing this." She reads the email carefully. "K. He's here tonight."`,
+       e5:`"Mud from the garden path. On formal khussas." She nods slowly. "I know that path. In February, with the pond overfull from winter rains, if you walked along the pond edge — yes. You'd come back with exactly that."`
+     }
+    }
+  ]
+},
+
+C004:{
+  id:'C004',title:'The Last Guest at Pine Lodge',
+  victim:'Justice (retd.) Anwar Cheema, 70',location:'Pine Hollow Lodge, Nathia Gali',
+  killerId:'gulzar',
+  method:'Insulin overdose via tampered pen, timeline faked using the lodge intercom',
+  briefText:`6 January 2026. A blizzard sealed them in before dinner — road gone, phones dead, seven souls at Pine Hollow Lodge with nowhere to go. Among them: Justice (retired) Anwar Cheema, a judge whose verdicts had sent men to the gallows. At midnight, a guest in the next room heard him alive — his voice, his beloved cricket commentary drifting through the wall. At 7:40 AM the caretaker knocked with morning tea and got no answer. They broke the door down. The lodge doctor signed it off as a heart attack in his sleep. Tragic. Natural. The post-mortem, three days later, said otherwise — and said something stranger still: the judge had been dead for two hours before the guest swears she heard him alive.`,
+  story:`Gulzar Deen, the quiet lodge caretaker, was no stranger to Justice Cheema — though the judge never recognised him. Eighteen years earlier, Cheema took a bribe to rule against a poor family in a land dispute, destroying them. That family was Gulzar's. His father died destitute; Gulzar ended up a servant on a mountainside. When Cheema checked in, Gulzar saw his chance. Around 10 PM he overdosed the judge with insulin from a pen he had already tampered with — a quiet, natural-looking death for a diabetic. Then he used the lodge's antique room-to-room intercom: he had recorded the judge's voice earlier that day, and that evening played it back into Room 5 alongside a cassette of an old cricket match. The neighbour heard "the judge alive at midnight" — and handed Gulzar his alibi. The flaw: the match she heard was a day ODI that had finished at 6 PM. No live cricket exists at midnight. The audio had to be a recording — and only the man who controls the lodge's intercom could have played it.`,
+  hotspots:[
+    {id:'e1',x:'55%',y:'52%',icon:'🔬',label:'AUTOPSY REPORT',
+     name:'The Delayed Post-Mortem',tag:'FORENSIC',
+     desc:`Report filed once the body reached Ayub Medical Complex, Abbottabad, after the road cleared three days later.`,
+     analysis:`NOT a heart attack. Cause of death: fatal insulin overdose. Liver temperature, lividity, and stomach contents place time of death at approximately 10:00 PM — roughly TWO HOURS before any witness claims to have heard the victim alive.`},
+    {id:'e2',x:'70%',y:'35%',icon:'💉',label:'NIGHTSTAND',
+     name:'The Insulin Pen',tag:'PHYSICAL',
+     desc:`The pen recovered from the Room 4 nightstand, sent for laboratory analysis once foul play was suspected.`,
+     analysis:`The cartridge had been refilled with insulin at several times the prescribed concentration. The judge injected his normal nightly dose around 10 PM and overdosed without knowing. Whoever did this had access to his room before dinner and knew his diabetic routine.`},
+    {id:'e3',x:'22%',y:'40%',icon:'👂',label:'ROOM 5 WALL',
+     name:'The Neighbour in Room 5',tag:'TESTIMONY',
+     desc:`Sworn statement of the guest in the room adjoining Room 4, taken the morning the body was discovered.`,
+     analysis:`"At midnight I heard him clear as day — his voice, low, like he was on the phone, and his cricket commentary through the wall. He always had the cricket on. So I know he was alive at twelve." The witness is certain. The witness is also, unknowingly, the killer's entire alibi.`},
+    {id:'e4',x:'38%',y:'25%',icon:'📻',label:'RADIO / DESK',
+     name:'The Cricket Schedule',tag:'DOCUMENT',
+     desc:`Cross-checked broadcast log for 6 January 2026, obtained from the Pakistan Cricket Board and national broadcaster.`,
+     analysis:`The only cricket on air that day was a day ODI that ended at 6:10 PM. There was NO live cricket broadcast anywhere near midnight. Whatever "live commentary" the neighbour heard at twelve could not have been live — it was a recording being played into that room from somewhere.`},
+    {id:'e5',x:'15%',y:'68%',icon:'🔌',label:'STAFF QUARTERS',
+     name:'The Lodge Intercom Panel',tag:'PHYSICAL',
+     desc:`Notes on the building's original 1960s room-to-room wiring, examined by the investigator after the storm cleared.`,
+     analysis:`Pine Hollow uses an antique intercom wired to a single control panel in the staff quarters. Audio can be pushed INTO any guest room from that panel. A cassette deck sits beside it. Only lodge staff hold keys to the staff quarters — and only one staffer was on duty that night.`}
+  ],
+  suspects:[
+    {id:'mehnaz',name:'Mehnaz Cheema',role:'Estranged Daughter',initials:'MC',stress:25,guilty:false,
+     alibi:'Was reading in the lounge until past midnight, confirmed by another guest around 11:50 PM.',
+     questions:[
+       {id:'q1',text:'When did you last see your father alive?',
+        resp:`"Dinner. He ate quickly and went up to his room — Room 4 — before the others had finished their chai." She looks at her hands. "He didn't want to talk to me. He never did."`,stressAdd:10,always:true,asked:false},
+       {id:'q2',text:'You stand to inherit a significant estate. That is noted.',
+        resp:`"Yes. And investigators love that, don't they. A cold daughter, a dead rich father." She meets the detective's gaze without flinching. "I was in the lounge until after midnight. Nadia saw me at 11:50. Ask her."`,stressAdd:15,always:true,asked:false},
+       {id:'q3',text:'You have not spoken to your father in five years. Why come to Nathia Gali now?',
+        resp:`"Because he was getting old and I am not as stubborn as I used to be." She pauses. "Or I thought I wasn't. He proved otherwise at dinner." Her voice is very controlled. "I didn't kill him. I was trying to forgive him."`,stressAdd:12,always:true,asked:false},
+       {id:'q4',text:'The post-mortem puts death at 10 PM. Your alibi only covers midnight onward.',
+        resp:`A pause. "10 PM. I was still at dinner at 10. Everyone was — except him. He'd already gone up." She sits forward. "That changes everything, doesn't it. All those alibis people have for midnight — they're useless if he died at ten."`,stressAdd:8,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"10 PM. Not midnight." She stares at the report for a long moment. "Then everything we've been told about that night is wrong. Someone made us all think he was alive two hours after he was already dead."`,
+       e2:`"His insulin pen was tampered with?" She presses her fingers to her mouth. "He injected every night at ten. Like clockwork. Junaid used to remind him if he forgot — he was the only one who knew the routine in that detail."`,
+       e3:`"The woman in Room 5 heard him at midnight. But if he died at ten..." She trails off. "She heard something. It just wasn't him."`,
+       e4:`"Cricket at midnight? That can't be right. There's never a live match that late in January." She looks up sharply. "So someone played a recording into her room. That's — that's deliberate."`,
+       e5:`"The intercom panel. In the staff quarters." She says it quietly. "Only one person runs this lodge. Only one person has that key."`
+     }
+    },
+    {id:'rehan',name:'Rehan Malik',role:'Brother of a Condemned Man',initials:'RM',stress:35,guilty:false,
+     alibi:'Claims he was walking the lodge corridors "to cool off" around 10 PM. No witness. Publicly threatened the judge at dinner.',
+     questions:[
+       {id:'q1',text:'Everyone heard what you said at dinner. "God has a way of settling debts." Explain that.',
+        resp:`"Exactly what it sounds like." He doesn't look away. "That man sent my brother to the gallows on fabricated evidence. He took a bribe. I know it. I've spent ten years trying to prove it." He leans forward. "And I'm not ashamed of saying it to his face."`,stressAdd:20,always:true,asked:false},
+       {id:'q2',text:'Where were you at 10 PM — when the judge actually died?',
+        resp:`"Walking. Up and down the first-floor corridor. I couldn't sleep, I couldn't sit still, I couldn't be in a room with that man's face. I walked until I was tired enough to go to bed." He shrugs. "No witness. I know how that looks."`,stressAdd:25,always:true,asked:false},
+       {id:'q3',text:'You had motive, you had opportunity at 10 PM, and no alibi. That is a very bad combination.',
+        resp:`"Yes. It is." He says it flatly. "I hated him. I had every reason to want him dead. But I didn't do it." A pause. "Not because I'm a good person. Because I've spent ten years trying to expose him legally. Killing him destroys that. It makes him a martyr."`,stressAdd:18,always:true,asked:false},
+       {id:'q4',text:'Did you see or hear anything unusual on the first floor that evening?',
+        resp:`"Around 10:15, I heard the door to the back corridor open and close — not a guest room door. The heavier one, near the boiler room and staff quarters. I assumed it was the caretaker. He's always moving around at night." He pauses. "Gulzar. His name is Gulzar."`,stressAdd:10,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"10 PM. So he was already dead when I was walking those corridors." He exhales slowly. "And someone made sure we all thought otherwise. That's cold. That's planned."`,
+       e2:`"His insulin pen. Someone knew exactly when he injected and exactly what would happen if the dose was wrong. That's not rage — that's calculation. I'm angry, not calculated."`,
+       e3:`"The room next door heard him at midnight. But you're saying he was dead at ten." He sits back. "Someone put those sounds into her room. Someone who knew the building well enough to do it without being noticed."`,
+       e4:`"No live cricket at midnight." He almost laughs. "Of course there isn't. Whoever did this made one mistake — they picked a sport with a fixed schedule." He stares at the broadcast log. "That's your killer. Find who played that tape."`,
+       e5:`"The intercom. The staff quarters." He says it with sudden certainty. "Gulzar. Gulzar was in and out of that corridor all night. He told me himself he was 'doing his rounds.' He could have played that recording from the panel and been back in the boiler room in two minutes."`
+     }
+    },
+    {id:'junaid',name:'Junaid Sethi',role:'The Judge\'s Law Clerk',initials:'JS',stress:15,guilty:false,
+     alibi:'Claims he turned in around 9:30 PM, exhausted from the drive. No witness to confirm or deny.',
+     questions:[
+       {id:'q1',text:'You knew Justice Cheema\'s diabetic routine better than anyone — when he injected, what he ate.',
+        resp:`"I managed his schedule for six years. Yes, I knew his routine." He says it carefully. "He injected around 10 PM each night, after his last cup of chai. He was precise about it. Didn't like being reminded but needed the structure."`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'You went to bed at 9:30 PM. No one saw you after that.',
+        resp:`"I was exhausted. The drive through that snow was — I was running on three hours of sleep." He folds his hands. "I know that leaves me unaccounted for. But if I wanted to harm Justice sahib I had ten years of opportunities. I didn't want to harm him."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'The insulin pen cartridge was tampered with — filled to a fatal concentration. Someone with detailed knowledge of his routine did this.',
+        resp:`"Then you're looking for someone who'd observed him closely. Over days, not minutes." He pauses. "I am one person who fits that. So is any good caretaker who served him tea every evening and watched him prepare his injection at the same table, at the same time, every night."`,stressAdd:20,needsEv:'e2',asked:false},
+       {id:'q4',text:'Why were you and the judge travelling alone together? No security, no family.',
+        resp:`"He wanted quiet. He said he had decisions to make — he was drafting something, a statement of some kind. He didn't tell me what." He hesitates. "He did tell me he was afraid of someone. He didn't say who."`,stressAdd:8,always:true,asked:false}
+     ],
+     evReactions:{
+       e1:`"10 PM. He died at 10 PM." He goes very still. "I went to bed at 9:30 and heard nothing. But someone else would have been awake at 10. Someone who served him his evening chai."`,
+       e2:`"Multiple times the concentration. He would have felt nothing unusual — the dose was his normal amount, just far stronger." A long pause. "Whoever refilled that cartridge was inside Room 4 before dinner. With a key."`,
+       e3:`"She heard him at midnight. But he was dead at ten." He looks up, something shifting in his expression. "Someone played his voice into that room. Someone who had recorded him earlier that day. At dinner, or — " He stops. "The caretaker was at dinner. Serving. He was in the room the whole time."`,
+       e4:`"No live cricket at midnight. Of course not." He looks stricken. "Justice sahib loved the cricket. Everyone at the lodge knew that. Gulzar knew it — he'd set up the radio for him the first evening."`,
+       e5:`"The intercom panel. In staff quarters." He closes his eyes briefly. "Only Gulzar has that key. Only Gulzar was moving through the lodge at midnight without anyone questioning it."`
+     }
+    },
+    {id:'gulzar',name:'Gulzar Deen',role:'Lodge Caretaker',initials:'GD',stress:8,guilty:true,
+     alibi:'Claims he was doing rounds and stoking the boiler all night — plausibly moving through the entire lodge unquestioned.',
+     questions:[
+       {id:'q1',text:'You served Justice Cheema his evening tea. Walk me through that.',
+        resp:`"At half past nine, as usual. He was preparing for bed — he had his briefcase open on the desk." A quiet pause. "He was very particular about his tea. No sugar. Hot, not boiling." He speaks with careful detail. Almost too careful.`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'Where were you at 10 PM and throughout the night?',
+        resp:`"My rounds. The boiler needs stoking every two hours in that cold — if it dies, the pipes freeze. I was moving through the lodge the whole evening." He is calm. Unhurried. "Nobody sees me. That is my job — to make the lodge run without being noticed."`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'You hold the master key to every room. You could have entered Room 4 at any time.',
+        resp:`"I have the master key, yes. For emergencies." He does not flinch. "I did not enter Room 4 after delivering his tea. There was no reason to." A small pause. "If the judge had locked his door from the inside, even my key would not have opened it."`,stressAdd:12,always:true,asked:false},
+       {id:'q4',text:'The intercom control panel is in your staff quarters. Audio can be pushed into any guest room from it. You have the only key.',
+        resp:`A pause longer than the others. "The old intercom. Yes." He looks at his hands. "I use it sometimes to check if guests need anything. It is an old system." His voice is still level. His stillness is absolute.`,stressAdd:38,needsEv:'e5',asked:false},
+       {id:'q5',text:'The cricket match the neighbour heard at midnight had ended at 6 PM. It could not have been live. It was played on a cassette from your intercom panel into Room 5 — while the judge had already been dead for two hours.',
+        resp:`He says nothing for a very long time. When he finally speaks, his voice is quiet and without any tremor. "My father's name was Tariq Deen. Justice Cheema took everything we had. My father died in a one-room apartment in Mansehra." A pause. "He never once knew what he had done."`,stressAdd:60,needsEv:'e4',asked:false}
+     ],
+     evReactions:{
+       e1:`"The medical officer who came that morning agreed it was natural. A heart condition." He says it without expression. "A post-mortem is more precise, of course. That is science."`,
+       e2:`"The pen was on the nightstand when I went to collect the tray the next morning. I did not touch it." He meets the detective's gaze steadily. "I would not know how to tamper with such a thing."`,
+       e3:`"The lady in Room 5 heard what she heard. I would not question her. She seemed very certain." A small, careful nod. Nothing more.`,
+       e4:`He looks at the broadcast schedule for a long moment. A muscle in his jaw moves slightly. "I see." He says nothing else.`,
+       e5:`"The panel has been there since 1963. I am the only one who uses it." He pauses. "I used it that evening, yes. To check if the guests needed anything before I stoked the boiler at midnight." A very long silence. "That is all I will say without a lawyer present."`
+     }
+    }
+  ]
+},
+
+C005:{
+  id:'C005',title:'The Final Illusion',
+  victim:'Sikandar Ali, 49',location:'Roxy Grand Theatre, Saddar, Karachi',
+  killerId:'tariq',
+  method:'Benzodiazepine sedative laced into pre-show throat spray; tank was never tampered with',
+  briefText:`Eight hundred people watched him die and not one of them saw a murder. The Great Sikandar's farewell show sold out in an hour. The finale was the trick that made his name: "The Pharaoh's Tomb." Wrists chained, he is locked inside a glass tank of water, padlocked in full view of the audience. A black curtain drops. In ninety seconds, by legend, he vanishes and reappears at the back of the hall. That night the curtain dropped. The orchestra held its breath. Ninety seconds passed. Then two minutes. Then the assistants tore the curtain away — and found him still inside the tank, motionless, chains intact, the padlock shut. The papers called it a tragic accident. The police were ready to agree — until the autopsy found something in his blood that no failed trick could explain.`,
+  story:`Tariq "Toto" Mehmood was not always a valet. He is the son of Ustad Mehmood — a once-celebrated magician whose masterpiece, an underwater escape called "The Pharaoh", was stolen, renamed, and made famous by a young Sikandar decades ago. Ustad Mehmood died forgotten and broke. His son changed his surname, learned to disappear into the role of a devoted dresser, and spent twenty patient years at Sikandar's side waiting for the farewell show — the night the stolen illusion would finally kill its thief. Tariq never touched the tank, the chains, or the padlock. He didn't need to. Before every performance Sikandar used a ritual throat spray, prepared and handed to him by one person for twenty years: Tariq. That night Tariq laced the spray with a fast-acting sedative. Sikandar stepped into the water already losing consciousness, blacked out underwater, and could not perform the escape he had performed a thousand times. To eight hundred people, it looked like the trick failed. The tank was never tampered with — because the tank was never the weapon.`,
+  hotspots:[
+    {id:'e1',x:'52%',y:'28%',icon:'💀',label:'THE TANK',
+     name:'The Autopsy Contradiction',tag:'FORENSIC',
+     desc:`Post-mortem and toxicology filed at Jinnah Postgraduate Medical Centre, Karachi.`,
+     analysis:`Cause of death is drowning — but the blood carries a fast-acting benzodiazepine sedative (midazolam). At that dose a man loses consciousness within 60–90 seconds of absorption. Sikandar was sedated as he entered the tank. This was not a failed escape; he was unconscious before he could begin it.`},
+    {id:'e2',x:'38%',y:'16%',icon:'🔗',label:'APPARATUS',
+     name:'The Tank That Worked Perfectly',tag:'FORENSIC',
+     desc:`Police engineering test of the glass tank, chains, padlock, and hidden mechanism, conducted after the death.`,
+     analysis:`Investigators stripped and tested every component. EVERY part functioned flawlessly. The hidden escape key was exactly where it should be and opened the lock first try. Nothing was sabotaged. Whoever killed him never went near the mechanism — so the one man who controls the mechanism is not your answer.`},
+    {id:'e3',x:'22%',y:'52%',icon:'💨',label:'DRESSING TABLE',
+     name:'The Ritual Throat Spray',tag:'PHYSICAL',
+     desc:`A small atomiser bottle recovered from the victim's dressing table, sent for residue analysis.`,
+     analysis:`Sikandar used this throat spray 30 seconds before every performance — a superstition for twenty years. Residue analysis: it is laced with the same sedative found in his blood. Only one person prepared, filled, and handed him this bottle before each show.`},
+    {id:'e4',x:'72%',y:'50%',icon:'🎥',label:'AUDIENCE FOOTAGE',
+     name:'Eight Hundred Phones, One Empty Seat',tag:'SURVEILLANCE',
+     desc:`Audience footage and ticketing reconciled against the suspect list by investigators.`,
+     analysis:`Row C, Seat 14 — the rival, Faraz Khan — is filmed in the audience, reacting in horror, for the entire finale. He never left his seat and could not have reached the backstage area. The man with the loudest motive has the cleanest alibi.`},
+    {id:'e5',x:'14%',y:'72%',icon:'📜',label:"VALET'S LOCKER",
+     name:'A Yellowed Playbill',tag:'DOCUMENT',
+     desc:`Found taped inside the lid of the valet's locker during the backstage search.`,
+     analysis:`A 1980s playbill: "USTAD MEHMOOD presents THE PHARAOH — the impossible underwater escape" — predating Sikandar's entire career by years. The valet's employment file lists no family. The surname on the playbill is not the surname he gave. He has been someone else this whole time.`}
+  ],
+  suspects:[
+    {id:'faraz',name:'Faraz Khan',role:'Rival Illusionist',initials:'FK',stress:30,guilty:false,
+     alibi:'Bought a ticket to the farewell show — Row C, Seat 14 — and is on dozens of cameras in the audience for the entire finale.',
+     questions:[
+       {id:'q1',text:'You\'ve publicly wished Sikandar dead. You crashed his press events. Explain yourself.',
+        resp:`"He stole the trick that made his name from a better man and spent forty years taking credit for it. I said what needed to be said." He leans forward. "I wanted him humiliated in front of an audience. Not dead. Dead is too quiet for what he deserved."`,stressAdd:20,always:true,asked:false},
+       {id:'q2',text:'Where exactly were you when he died?',
+        resp:`"Row C, Seat 14. I bought the ticket myself — front and centre, so he'd see me in the audience during his great farewell." He almost smiles. "I am on a hundred cameras. You've seen the footage."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'The footage confirms you never left your seat for the entire finale.',
+        resp:`"No. I didn't." He sits back. "I watched him fail to escape. I thought, for a moment — God forgive me — that it was justice. Then they found him in there and I understood it was murder." He looks at his hands. "I didn't do this."`,stressAdd:5,needsEv:'e4',asked:false},
+       {id:'q4',text:'If a sedative was in his blood, it was placed there before he reached the tank. From backstage.',
+        resp:`"Before the tank. Before the curtain. Then no one in that audience did anything." He is very still. "Someone backstage handed him something. Something he trusted." A pause. "Who prepared his pre-show rituals?"`,stressAdd:8,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"Sedated before the tank. So he was already dying when he walked to it. That is not a backstage malfunction — that is someone he trusted, minutes before, handing him poison."`,
+       e2:`"Of course the tank worked. Adnan Baig builds everything to last. If the mechanism is innocent, stop looking at the mechanism."`,
+       e3:`"The throat spray." He says it immediately. "He did it before every show. Same bottle, same ritual, every night. Who filled it?"`,
+       e4:`"There I am. Row C. I didn't move." He says it without triumph. "I came to watch him fail. I didn't know someone else had already arranged it."`,
+       e5:`"Ustad Mehmood." He reads the playbill slowly. "I knew that name. He was better than Sikandar ever was. His 'Pharaoh' was extraordinary." He goes very quiet. "Who is the valet?"`
+     }
+    },
+    {id:'adnan',name:'Adnan Baig',role:'Stage Engineer',initials:'AB',stress:18,guilty:false,
+     alibi:'Operated the rigging in full view of six crew members for the entire act.',
+     questions:[
+       {id:'q1',text:'You built the tank. You know the secret release. If anyone could rig it to kill, it\'s you.',
+        resp:`"Every bolt, yes. Every latch. I designed it to save his life — there\'s a release I built in myself so he could never truly be trapped." He meets the detective\'s gaze. "Test it. I want you to test it."`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'Could you have sabotaged the mechanism before the show?',
+        resp:`"Theoretically, yes. I know how to do it. But I didn't." He says it without drama. "Six crew members watched me operate the rigging the entire act. And the test results are coming back. Wait for them."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'The tank tested perfectly. Every part functioned. Nothing was sabotaged.',
+        resp:`"I know." He exhales. "I was there when they tested it. I almost wanted it to be faulty — at least then I'd understand." He looks up. "If the mechanism isn't the answer, something else happened to him before he reached the tank."`,stressAdd:8,needsEv:'e2',asked:false},
+       {id:'q4',text:'The throat spray contained the same sedative found in his blood. He took it backstage, before the apparatus.',
+        resp:`"The throat spray. My God." He is quiet for a long moment. "He did that every single show. Same bottle. In the dressing room." He looks up slowly. "I never went near his dressing room before a show. Toto handled everything in there. Everything."`,stressAdd:15,needsEv:'e3',asked:false}
+     ],
+     evReactions:{
+       e1:`"Sedated before the tank. Then it doesn't matter that the mechanism worked — he couldn't have operated the release even if he'd remembered where it was."`,
+       e2:`"As I built it. Every time. He could have escaped if he had been conscious." He sits with that for a moment.`,
+       e3:`"He used it before every show for twenty years. It was in the dressing room when I arrived for the pre-show check. Toto had already laid everything out." A pause. "Toto. Ask Toto who filled that bottle."`,
+       e4:`"Faraz was in the audience. I always assumed it was him." He shakes his head. "Sedating someone from Row C is not possible. Whoever did this was in the dressing room."`,
+       e5:`"Ustad Mehmood's 'Pharaoh'." He stares at the playbill. "Sikandar saw that trick in Lahore decades ago and built his entire career on it. The old man never recovered." A long silence. "Toto is Mehmood's son?"`
+     }
+    },
+    {id:'naheed',name:'Naheed Sikandar',role:'Wife & Business Manager',initials:'NS',stress:28,guilty:false,
+     alibi:'Was in the wings on a call with the venue manager when it happened — the call is timestamped.',
+     questions:[
+       {id:'q1',text:'A large life insurance policy. A marriage that was ending. You had everything to gain.',
+        resp:`"Yes. And yes." She is composed, almost rehearsed. "I won't pretend otherwise. But I was in the wings on a timestamped phone call with the venue manager when it happened." She holds the detective's gaze. "Pull the call log."`,stressAdd:15,always:true,asked:false},
+       {id:'q2',text:'A divorce would have cut you out of everything. That\'s a significant motive to avoid one.',
+        resp:`"Which is why divorce was not something I was seeking." She says it carefully. "Killing him also ends the income. If I wanted his money I needed him breathing, on stage, performing." A pause. "I am many things. I am not stupid."`,stressAdd:12,always:true,asked:false},
+       {id:'q3',text:'A sedative was in his blood. Someone planned this. Someone who knew his pre-show routine intimately.',
+        resp:`"I knew his routine from a distance — schedules, bookings, contracts. His pre-show ritual was private. He was superstitious about it." She pauses. "Toto handled all of that. The spray, the costume, the chains. Twenty years."`,stressAdd:10,needsEv:'e1',asked:false},
+       {id:'q4',text:'This playbill was in the valet\'s locker. Toto is Ustad Mehmood\'s son. His father\'s illusion.',
+        resp:`"Toto." She says it very slowly. "He has been with us since before I married Sikandar. He was — " She stops. "He laid out the throat spray every single night. I watched him do it." Her voice changes completely. "He was waiting the whole time."`,stressAdd:10,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"He was sedated before the tank." She is very still. "That means someone in the dressing room. I was in the wings. Adnan was at the rigging." A pause. "There is only one person left in that dressing room."`,
+       e2:`"The tank worked perfectly. Adnan built it to work perfectly." She sits forward. "So whoever did this never needed to touch the tank at all."`,
+       e3:`"The throat spray was always in the dressing room when I passed by before a show. Toto laid it out. Toto had it ready." She closes her eyes briefly. "I never questioned it."`,
+       e4:`"Faraz Khan was in the audience." She almost laughs. "All those threats, all those scenes — and he bought a ticket and sat in Row C." She sobers. "Not him, then."`,
+       e5:`She reads the playbill. A long silence. "This is Toto's father." She looks up. "Sikandar stole from his father. And Toto stayed with us for twenty years, laid out that spray every night, and never said a word." Her voice is very quiet. "I never even knew his real surname."`
+     }
+    },
+    {id:'tariq',name:'Tariq "Toto" Mehmood',role:'Personal Valet (20 years)',initials:'TM',stress:7,guilty:true,
+     alibi:'Says he was tidying the dressing room during the finale, alone, as always.',
+     questions:[
+       {id:'q1',text:'You prepared everything before every show — costume, chains, throat spray. Twenty years.',
+        resp:`"Yes." He says it simply, without weight. "It was an honour. He was very particular — the chains had to be coiled a certain way, the spray on the left side of the table. He was precise." A small pause. "I was precise for him."`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'Where were you during the finale?',
+        resp:`"The dressing room. Tidying — he doesn't like returning to disorder. I fold the costume he removes, put away the case, re-coil the practice chains." He looks at his hands. "He always returns. I always have it ready." A long pause. "Had it ready."`,stressAdd:7,always:true,asked:false},
+       {id:'q3',text:'The throat spray contains the same sedative found in his blood. You filled it. You handed it to him.',
+        resp:`He is completely still. Not nervous — still. The silence lasts a full ten seconds. "I prepared the spray. Yes. I have always prepared it." He does not look away. He does not add anything.`,stressAdd:40,needsEv:'e3',asked:false},
+       {id:'q4',text:'This playbill was in your locker. Ustad Mehmood. That is your father. This is your father\'s illusion.',
+        resp:`He reaches out slowly. "May I?" He holds the playbill with both hands. Studies it for a long time. "My father spent three years creating that trick. He performed it once — one night, in Lahore, 1983. A young man in the second row was taking notes in a small book." He sets the playbill down carefully. "I still have the book."`,stressAdd:50,needsEv:'e5',asked:false},
+       {id:'q5',text:'You sedated him. You waited twenty years. You planned this from the beginning.',
+        resp:`"He performed my father's illusion for forty years. In my father's name. To eight hundred people. And he never once said the name Mehmood." A very long silence. He folds his hands on the table. "The illusion was his. The death was mine." Another silence. "I believe we are equal now."`,stressAdd:60,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"Midazolam. Fast-acting." He says the word with care. "At that dose, he would have felt very calm. Peaceful. He would have thought it was concentration." A pause. "He would not have been afraid."`,
+       e2:`"Of course it worked. Adnan Baig builds things that last." He says it with something close to respect. "I never touched the tank. There was no reason to."`,
+       e3:`He looks at the atomiser bottle. A long silence. "Twenty years. The same bottle, the same position on the table, the same thirty seconds before the curtain." He does not look up. "He never questioned it."`,
+       e4:`"Faraz Khan. He hated Sikandar loudly and honestly." He says it without irony. "There is something almost clean about that kind of anger. Out in the open."`,
+       e5:`He holds out his hand before the detective has finished speaking. Takes the playbill. Holds it carefully, face-down, and turns it over slowly. "I carried this for twenty years. In that locker. To remind myself why I was there." He sets it down gently. "I never forgot for a single day."`
+     }
+    }
+  ]
+},
+
+C006:{
+  id:'C006',title:'The 8:15 to Campus',
+  victim:'Hamza Sheikh, 21',location:'Iqra Hostel Room 214 — Karachi',
+  killerId:'faisal',
+  method:'Aconite (bish) laced into honey jar in Room 214; victim consumed it in morning tea before boarding the bus',
+  briefText:`He got on the bus laughing. Twenty-five minutes later he was dead on the floor of it. Hamza Sheikh caught the 8:15 university point bus like he did every morning — earphones in, bag half-zipped, joking with the boys in the back. CCTV at the gate shows him boarding fine. At 8:35 a classmate offered him a few sips of an energy drink. At 8:40, somewhere along University Road, Hamza grabbed his throat, convulsed, and collapsed in the aisle. He was gone before the bus reached the campus gate. The first theory wrote itself: somebody poisoned him on that bus. The second theory: somebody got to him at the stop while he waited. Both feel obvious. Both are wrong. The autopsy found a plant toxin in his stomach — and the one thing it tells you for certain is the one thing nobody wants to hear: by the time Hamza stepped onto that bus, he was already dying.`,
+  story:`Faisal Ahmed was not just Hamza's roommate — he was the one being bled dry. Hamza was a quiet predator. His phone held recordings and photos he used to squeeze half the hostel: exam-leak buyers, a warden skimming mess funds, an ex-girlfriend's private pictures. And Faisal: Hamza had filmed him cheating in the final-year papers and for months had been milking him for money, errands, silence. With finals closing in and the demands never ending, Faisal stopped paying and started planning. He laced the honey jar in Room 214 — the honey only Hamza ever touched, three heaped spoons in his morning tea, every day without fail. The toxin is slow to bite: thirty to ninety minutes. Faisal made Hamza one last cup of tea, watched him stir in the honey and run for the bus, then told everyone he felt unwell and took a rickshaw to campus alone. Hamza collapsed a mile away, surrounded by classmates, while the real killer sat in traffic with a clean conscience and a cleaner alibi. Four people had louder motives. Faisal counted on it.`,
+  hotspots:[
+    {id:'e1',x:'55%',y:'35%',icon:'🧪',label:'AUTOPSY REPORT',
+     name:'The Toxicology Window',tag:'FORENSIC',
+     desc:`Autopsy and toxicology, Civil Hospital Karachi. Conducted after Hamza was pronounced dead at 8:58 AM.`,
+     analysis:`Cause of death: cardiac arrest from aconite ("bish"), a plant toxin. Symptom onset runs 30 to 90 minutes after ingestion. With collapse at 8:40 AM, the poison was swallowed between roughly 7:10 and 8:10 AM — too early for anything on the bus at 8:35, and far too late for the previous night's dinner. He was dosed before he ever left the hostel.`},
+    {id:'e2',x:'72%',y:'22%',icon:'🥤',label:'BUS EVIDENCE',
+     name:'The Drink and the Juice — Both Clean',tag:'PHYSICAL',
+     desc:`Items seized from the bus and recovered from the victim's bag by investigating officers.`,
+     analysis:`The energy drink the classmate shared at 8:35 tested CLEAN. The fresh juice Hamza bought at the bus stop was found still sealed and full in his bag — he never drank it, and it was clean too. The two most obvious vectors, the two most dramatic moments, carried no poison at all.`},
+    {id:'e3',x:'20%',y:'32%',icon:'🍽️',label:'MESS CANTEEN',
+     name:'The Skipped Breakfast',tag:'TESTIMONY',
+     desc:`Statements from the hostel mess cook and warden, and from Hamza's roommate.`,
+     analysis:`Hamza overslept and SKIPPED the mess breakfast that morning — the warden and cook both confirm he never came to the canteen. The only thing he consumed in the 7:10-8:10 window was a cup of tea his roommate made him in the room "for the road", which Hamza drank with his usual heap of honey.`},
+    {id:'e4',x:'35%',y:'17%',icon:'🍯',label:'SHELF — ROOM 214',
+     name:'The Honey Jar',tag:'PHYSICAL',
+     desc:`Recovered from the shelf in Room 214, Iqra Hostel, during the search of the victim's belongings.`,
+     analysis:`The honey jar tests positive for aconite. Crucial detail: of the two occupants in that room, only Hamza ate honey — his roommate is diabetic and never touches it. The poison was hidden in the one item the killer knew the victim, and only the victim, would consume. This was placed by someone who knew Hamza's exact morning ritual.`},
+    {id:'e5',x:'58%',y:'63%',icon:'📱',label:"VICTIM'S PHONE",
+     name:'The Blackmail Folder',tag:'DOCUMENT',
+     desc:`A hidden, locked folder on the victim's phone, recovered and unlocked by the forensics unit.`,
+     analysis:`Hamza was extorting several people with secret recordings — including footage of his roommate cheating in the finals. Bank messages show that roommate had been handing Hamza money for months, then abruptly stopped two weeks ago. And on the morning of the murder, that same roommate told friends he felt sick and took a rickshaw alone — skipping the bus he rode every other day.`}
+  ],
+  suspects:[
+    {id:'bilal',name:'Bilal Raza',role:'Classmate (on the bus)',initials:'BR',stress:28,guilty:false,
+     alibi:'On CCTV the entire ride; the drink he shared tested clean; the toxicology window places the dose long before he opened that can.',
+     questions:[
+       {id:'q1',text:'You were the last person to hand Hamza anything before he collapsed.',
+        resp:`"I gave him a few sips of my Red Bull — he looked tired, he asked for one. We sat together every day. He was laughing, he was fine." He shakes his head. "And then he wasn't." He looks genuinely sick.`,stressAdd:14,always:true,asked:false},
+       {id:'q2',text:'He convulsed right after drinking from your can. That looks very bad.',
+        resp:`"I know. I know how it looks. I threw up on the side of the road, I was so scared." A pause. "The police took the can immediately. Test it. It'll be clean."`,stressAdd:18,always:true,asked:false},
+       {id:'q3',text:'The drink tested clean. The toxicology window puts the dose at least thirty minutes before you handed him anything.',
+        resp:`He exhales so deeply it seems to empty him. "So it wasn't me." He rubs his face. "Something had already done it. Before he even got on the bus." He sits up. "Then who was near him before the bus?"`,stressAdd:4,needsEv:'e2',asked:false},
+       {id:'q4',text:'Did Hamza seem off before you gave him the drink?',
+        resp:`"Yes, actually. He sat down quickly — quiet. He said his hands felt weird. I thought he was just hungry." A pause. "He said 'I feel strange.' I told him drink some sugar. I thought he'd skipped breakfast."`,stressAdd:6,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"7:10 to 8:10. That's before the bus, before the stop, before I even saw him." He stares at the report. "Something from the hostel. The room."`,
+       e2:`"Both clean. So neither of us on that bus could have done it." He sits forward. "Then it was before. The hostel."`,
+       e3:`"He skipped the mess?" He thinks. "So the kitchen's out. Then it had to be the room. He had tea in the room — he told me about that. His roommate made it."`,
+       e4:`"The honey jar. He always had one. He put it in everything." He stops. "That's in the room. That's Faisal's room."`,
+       e5:`"Hamza was blackmailing Faisal?" His expression shifts. "Faisal told everyone he felt sick and took a rickshaw. He NEVER misses the bus. In three years I've never seen him take a rickshaw."`
+     }
+    },
+    {id:'sana',name:'Sana Malik',role:'Ex-girlfriend (at the stop)',initials:'SM',stress:32,guilty:false,
+     alibi:'The juice she handed him was found sealed and untouched in his bag. She had no access to Room 214. Her motive is real; her opportunity is empty.',
+     questions:[
+       {id:'q1',text:'You were at the bus stop the morning he died. After everything he did to you.',
+        resp:`"I go to the same university. Same stop. I wasn't there for him." Her voice is controlled. "I was there because I have an 8:30 lecture. I've been taking that stop for two years."`,stressAdd:15,always:true,asked:false},
+       {id:'q2',text:'He leaked your private photos. You threatened him in public. Those are your words.',
+        resp:`"Yes. And I meant them." She doesn't look away. "But killing someone on a public bus stop in broad daylight is not revenge — that's just getting caught. I'm angry. I'm not stupid."`,stressAdd:20,always:true,asked:false},
+       {id:'q3',text:'You handed him a juice. He never drank it. It tested clean.',
+        resp:`"He didn't even look at me when he took it. He just — put it in his bag." A pause. "Two years together. And he couldn't even look at me." She stares at the table. "Yes. It was clean. I knew it would be."`,stressAdd:8,needsEv:'e2',asked:false},
+       {id:'q4',text:'The toxicology window proves he was already poisoned before he reached the stop.',
+        resp:`"Before the stop." She exhales slowly. "So I couldn't have done it. I wasn't anywhere near the hostel at 7 AM." She looks up. "The room. Someone who lives with him. Someone who made him something before he left."`,stressAdd:5,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"Before the stop. He was already poisoned when I saw him?" She is very still. "He looked pale. I thought it was guilt. It was the toxin already."`,
+       e2:`"The juice was clean. I gave it to him as a — I don't know. A habit." A pause. "Now find who actually killed him."`,
+       e3:`"He skipped the mess. Then the canteen is out." She thinks. "The room. Someone who had access before 8:10. Someone he lived with."`,
+       e4:`"The honey jar." She sits forward. "He had a honey thing — he talked about it. Three spoons in his morning tea. His roommate knew every habit he had."`,
+       e5:`"He was blackmailing me. And his own roommate." She closes her eyes briefly. "He was blackmailing half the hostel. And someone finally stopped paying in a way he didn't expect."`
+     }
+    },
+    {id:'rashid',name:'Rashid Iqbal',role:'Hostel Mess Warden',initials:'RI',stress:25,guilty:false,
+     alibi:'Hamza never came to the mess that morning. You cannot poison a meal a man never eats.',
+     questions:[
+       {id:'q1',text:'Hamza had recordings of you skimming mess funds. How much was he taking from you?',
+        resp:`"Four thousand a month. For eight months." He says it with the exhaustion of someone confessing something very old. "I know how it looks. I was paying because I was too afraid to do anything else."`,stressAdd:20,always:true,asked:false},
+       {id:'q2',text:'You run the kitchen. You had better access to poison a student\'s food than anyone else.',
+        resp:`"Yes. In a canteen that feeds three hundred boys, watched by cooks and students every morning." He spreads his hands. "If I wanted to poison someone quietly, I picked the most crowded, most visible place in the hostel to do it. Does that make sense to you?"`,stressAdd:12,always:true,asked:false},
+       {id:'q3',text:'Hamza never came to breakfast that morning. He skipped the mess entirely.',
+        resp:`"I know. I waited — I owed him that morning's money and was going to pay. He never showed." He pauses. "I assumed he'd collect it later. Then I heard what happened." A long pause. "You cannot poison a meal a man never eats."`,stressAdd:5,needsEv:'e3',asked:false},
+       {id:'q4',text:'The blackmail folder shows recordings of multiple people — including you. Hamza had a lot of leverage.',
+        resp:`"The recording is of me adjusting the food budget figures in my office. Theft from the university, not from boys." He looks down. "I was ashamed. He used shame very well." A pause. "Faisal was also on that phone. Did you know that?"`,stressAdd:8,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"7:10 to 8:10. I was in the kitchen from 6 AM, surrounded by cooks the whole morning." He pauses. "But at 7 AM the boys are still in their rooms. Getting ready."`,
+       e2:`"The bus drink and the juice were clean. Then nothing happened on the route." He folds his hands. "Whoever did this was in the hostel with him. Before he left."`,
+       e3:`"He never came to the canteen. I had nothing to give him. Whatever was done to him, I had no part in it."`,
+       e4:`"A honey jar with aconite in it. That's specific. That's personal." He is quiet a moment. "Who knew he put honey in his tea every single morning?"`,
+       e5:`"Yes, I'm in that folder. So is Faisal." He looks up. "Hamza told me once — to let me know I wasn't the only one he had. Said Faisal had stopped paying two weeks ago. He was very angry about it."`
+     }
+    },
+    {id:'faisal',name:'Faisal Ahmed',role:'Roommate & Best Friend',initials:'FA',stress:9,guilty:true,
+     alibi:'Says he felt unwell and took a rickshaw to campus alone. That is an alibi for the bus — not for the room.',
+     questions:[
+       {id:'q1',text:'You made Hamza a cup of tea before he left. Walk me through that morning.',
+        resp:`"He overslept — he always overslept. I already had the kettle on. I made us both a cup, he dropped his honey in, drank it standing up, grabbed his bag, and ran for the gate." He says it easily. Naturally. "I waved him off from the door."`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'You didn\'t take the bus that morning. You take it every other day. Why the rickshaw?',
+        resp:`"Headache. I didn't sleep well." He meets the detective's gaze evenly. "A crowded bus felt like too much. I flagged a rickshaw from the gate." A small pause. "It's not a dramatic thing."`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'The honey jar on your shelf tests positive for aconite. You\'re diabetic — you never touch it. Only Hamza used it.',
+        resp:`A pause — half a beat longer than his others. "The jar has been on that shelf for months. Many people come through that room." He doesn't look away. "I didn't put anything in it."`,stressAdd:38,needsEv:'e4',asked:false},
+       {id:'q4',text:'This phone folder shows you paying Hamza monthly for months, then stopping two weeks ago. He had footage of you cheating in your finals.',
+        resp:`He exhales. A long, slow breath. "Yes. He had a video." A pause. "I stopped paying because I had nothing left. The exams are in three weeks. I told him I was done." His voice is flat. "He said he'd send it to the department."`,stressAdd:45,needsEv:'e5',asked:false},
+       {id:'q5',text:'The toxicology window puts the poison in something he consumed between 7:10 and 8:10. In the room. While you were alone with him. You made the tea. You knew the honey.',
+        resp:`He says nothing for a long time. The room is very quiet. When he speaks it is barely above a whisper. "He was going to destroy my degree. My family's everything. Three years." A pause. "I put it in the jar the night before. I thought maybe it wouldn't work." Another pause. "It worked."`,stressAdd:60,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"7:10 to 8:10." He repeats the window quietly. "That's before the bus." His expression doesn't change. He is very still.`,
+       e2:`"The bus drink was clean. So it wasn't Bilal." He nods slowly. "That's what I heard too."`,
+       e3:`"He skipped the mess, yes. He told me he was running late — no time." A careful pause. "I had tea ready when he came back to the room."`,
+       e4:`He looks at the honey jar photograph. "That jar has been there since first year." A very long pause. "He never shared it. Said honey was his thing." He says it almost fondly.`,
+       e5:`He looks at the phone for a moment. "He showed me the video the first week of semester. He was laughing when he showed it." He does not say anything else.`
+     }
+    }
+  ]
 }
 };
 
@@ -1302,7 +1785,7 @@ const G={
 
   boot(){
     Audio.init();
-    const lines=['> DETECTIVE.PK SYSTEM v2.0','> PAKISTAN CRIMINAL INVESTIGATION BUREAU','> LOADING CLASSIFIED DATABASE...','> [████████████████] 100%','> 2 ACTIVE CASES — 1 CLASSIFIED','> AI INTERROGATION: STANDBY','> INITIALISING INTERFACE...'];
+    const lines=['> DETECTIVE.PK SYSTEM v2.0','> PAKISTAN CRIMINAL INVESTIGATION BUREAU','> LOADING CLASSIFIED DATABASE...','> [████████████████] 100%','> 6 ACTIVE CASES — 0 CLASSIFIED','> AI INTERROGATION: STANDBY','> INITIALISING INTERFACE...'];
     const el=document.getElementById('boot-lines');
     let delay=500;
     lines.forEach((l,i)=>{
@@ -1410,6 +1893,41 @@ const G={
         {s:'left:2%;top:38%;width:5%;height:48%',t:'DOOR'},
         {s:'left:12%;top:12%;width:14%;height:22%',t:'CABINET'},
         {s:'left:60%;top:70%;width:22%;height:18%',t:'DRINKS TROLLEY'},
+      ],
+      C003:[
+        {s:'left:34%;top:22%;width:28%;height:24%',t:'DESK'},
+        {s:'right:3%;top:4%;width:8%;height:36%',t:'TROPHY SHELF'},
+        {s:'right:3%;top:3%;width:20%;height:8%',t:'GARDEN WINDOW'},
+        {s:'left:2%;top:30%;width:5%;height:52%',t:'DOOR'},
+        {s:'left:8%;top:10%;width:16%;height:20%',t:'ARMCHAIR'},
+        {s:'left:56%;top:68%;width:20%;height:20%',t:'SIDE TABLE'},
+        {s:'left:28%;top:72%;width:10%;height:12%',t:'BODY OUTLINE'},
+      ],
+      C004:[
+        {s:'left:35%;top:18%;width:26%;height:22%',t:'BED'},
+        {s:'left:65%;top:28%;width:12%;height:26%',t:'NIGHTSTAND'},
+        {s:'left:30%;top:18%;width:8%;height:8%',t:'WINDOW'},
+        {s:'right:2%;top:20%;width:5%;height:55%',t:'DOOR'},
+        {s:'left:4%;top:8%;width:18%;height:18%',t:'WARDROBE'},
+        {s:'left:10%;top:60%;width:14%;height:18%',t:'INTERCOM PANEL'},
+        {s:'left:40%;top:68%;width:20%;height:14%',t:'BRIEFCASE'},
+      ],
+      C005:[
+        {s:'left:30%;top:8%;width:32%;height:36%',t:'GLASS TANK'},
+        {s:'left:4%;top:8%;width:16%;height:30%',t:'DRESSING TABLE'},
+        {s:'left:4%;top:46%;width:10%;height:32%',t:'LOCKER'},
+        {s:'right:2%;top:5%;width:5%;height:60%',t:'STAGE DOOR'},
+        {s:'left:62%;top:58%;width:20%;height:20%',t:'RIGGING CONSOLE'},
+        {s:'left:22%;top:64%;width:18%;height:16%',t:'COSTUME RACK'},
+      ],
+      C006:[
+        {s:'left:5%;top:8%;width:30%;height:22%',t:'BED — HAMZA'},
+        {s:'left:60%;top:8%;width:30%;height:22%',t:'BED — FAISAL'},
+        {s:'left:28%;top:5%;width:16%;height:8%',t:'SHELF'},
+        {s:'right:2%;top:18%;width:5%;height:55%',t:'DOOR'},
+        {s:'left:4%;top:38%;width:18%;height:20%',t:'STUDY DESK'},
+        {s:'left:40%;top:65%;width:22%;height:16%',t:'KETTLE / TEA'},
+        {s:'left:66%;top:62%;width:16%;height:20%',t:'WARDROBE'},
       ]
     };
     // Floor line for perspective
@@ -1604,7 +2122,11 @@ const G={
     const c=this.cs.case;
     const hints={
       C001:['The medication log has been altered — look at who controls those records.','The victim confronted someone the night before. Check his personal effects.','Physical evidence in the staff restroom links directly to the poison used.'],
-      C002:['Two people were drinking together that night. The killer wiped their own glass.','Only two people had the security override code. One of them is the victim.','A bribed guard and a vehicle log tell the same story — follow Imran\'s movements.']
+      C002:['Two people were drinking together that night. The killer wiped their own glass.','Only two people had the security override code. One of them is the victim.','A bribed guard and a vehicle log tell the same story — follow Imran\'s movements.'],
+      C003:['The surgeon\'s report tells you when — now ask who couldn\'t have been on the dance floor at that moment.','The victim emailed his lawyer at 9:52 PM. That email names the motive and narrows the suspects to one.','The killer staged a break-in but forgot about the garden path. Check what\'s on someone\'s shoes.'],
+      C004:['The post-mortem rewrites everything — the judge died two hours before anyone claims to have heard him alive.','No live cricket is broadcast at midnight. The sound the neighbour heard was a recording played from inside the lodge.','Only one person has the key to the staff quarters and the intercom panel. Find who controls the audio system.'],
+      C005:['The autopsy found a sedative in his blood — he was unconscious before the trick began. Stop looking at the tank.','The throat spray was prepared and handed to him by one person for twenty years. Find who filled that bottle.','A playbill in the valet\'s locker predates Sikandar\'s entire career. The illusion has a different creator — and a different name.'],
+      C006:['The toxicology onset window is 30-90 minutes — work backwards from 8:40 AM to find when Hamza was actually poisoned.','The bus drink and the bus stop juice both tested clean. The bus is a dead end. The murder happened before he left the hostel.','Hamza skipped the mess canteen that morning. The only thing he consumed was tea with honey in Room 214 — laced by the one person who never touches honey.']
     };
     const hint=(hints[c.id]||[])[this.cs.hintsUsed]||'Review all evidence carefully before making your arrest.';
     this.cs.hintsUsed++;this.cs.hintsLeft--;
