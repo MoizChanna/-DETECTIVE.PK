@@ -205,6 +205,7 @@ body:hover #cur .ring{width:28px;height:28px}
 
 /* Interrogation modal */
 #m-interr-box{width:760px;height:580px}
+.interr-modal-body{padding:0!important;overflow:hidden!important}
 .interr-body{display:grid;grid-template-columns:185px 1fr;height:100%;overflow:hidden}
 .interr-side{padding:20px;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
 .interr-portrait{width:110px;height:110px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--ink3),var(--dim));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:32px;color:var(--cream);filter:grayscale(.2)}
@@ -440,12 +441,21 @@ body:hover #cur .ring{width:28px;height:28px}
   .ev-inspect-desc{font-size:12px}
   .ev-inspect-analysis{font-size:11px;padding:10px 12px}
 
-  /* Interrogation — stack vertically */
-  .interr-body{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-  #m-interr{height:92vh}
+  /* Interrogation — single scrollable column on mobile */
+  #m-interr-box{height:88vh!important}
+  /* Override the desktop overflow:hidden so the whole body scrolls */
+  .interr-modal-body{
+    overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+    overflow:auto!important;
+    display:block!important;
+    max-height:calc(88vh - 52px)
+  }
+  .interr-body{
+    display:block;height:auto;overflow:visible
+  }
   .interr-side{
     display:grid;
-    grid-template-columns:100px 1fr;
+    grid-template-columns:90px 1fr;
     gap:12px;
     padding:14px 16px;
     border-right:none;
@@ -457,7 +467,9 @@ body:hover #cur .ring{width:28px;height:28px}
   .interr-srole{font-size:8px;text-align:left;margin-bottom:8px}
   .ev-present-section{grid-column:1/-1}
   .ev-pill{font-size:10px;padding:6px 8px}
-  .chat{padding:12px}
+  /* Chat: let it be full height (not flex-constrained) */
+  .interr-main{display:block;overflow:visible;height:auto}
+  .chat{padding:12px;overflow:visible;height:auto;flex:none;max-height:none}
   .msg{font-size:11px;padding:8px 12px}
   .q-section{padding:10px}
   .q-btn{font-size:11px;padding:10px 12px}
@@ -737,7 +749,7 @@ body:hover #cur .ring{width:28px;height:28px}
 
 <div class="overlay" id="m-interr" onclick="closeM('m-interr')"><div class="modal" id="m-interr-box" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title">INTERROGATION ROOM</div><button class="modal-x" onclick="closeM('m-interr')">✕</button></div>
-  <div class="modal-body" style="padding:0;overflow:hidden">
+  <div class="modal-body interr-modal-body">
     <div class="interr-body">
       <div class="interr-side">
         <div class="interr-portrait" id="i-portrait"></div>
