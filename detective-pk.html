@@ -198,8 +198,10 @@ body:hover #cur .ring{width:28px;height:28px}
 /* Evidence inspect modal */
 #m-ev{width:580px}
 .ev-inspect-tag{font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:14px}
-.ev-inspect-desc{font-size:14px;color:var(--muted);line-height:2;margin-bottom:18px}
-.ev-inspect-analysis{background:var(--ghost);border-left:3px solid var(--red);padding:14px 18px;font-size:13px;color:var(--cream);line-height:1.9}
+.ev-inspect-desc{font-size:14px;color:var(--muted);line-height:2;margin-bottom:18px;overflow-wrap:break-word;word-break:break-word}
+.ev-inspect-analysis{background:var(--ghost);border-left:3px solid var(--red);padding:14px 18px;font-size:13px;color:var(--cream);line-height:1.9;overflow-wrap:break-word;word-break:break-word}
+/* Bottom close button — hidden on desktop, shown on mobile */
+.modal-close-mobile{display:none}
 
 /* Interrogation modal */
 #m-interr{width:760px;height:580px}
@@ -402,8 +404,12 @@ body:hover #cur .ring{width:28px;height:28px}
 
   /* ── MODALS — full screen on mobile ── */
   .overlay{align-items:flex-end}
+  /* Use ID selectors (highest specificity) to guarantee width override */
+  #m-ev-box,#m-interr-box,#m-accuse .modal,#m-help .modal,#m-key .modal{
+    width:100vw!important;max-width:100vw!important
+  }
   .modal{
-    width:100%!important;max-width:100%!important;
+    width:100vw!important;max-width:100vw!important;
     max-height:88vh;border-radius:0;
     clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
     overflow:hidden
@@ -416,12 +422,19 @@ body:hover #cur .ring{width:28px;height:28px}
   }
   .modal-title{font-size:15px}
   /* Make ✕ close button large and easy to tap */
-  .modal-x{font-size:24px;padding:4px 10px;color:var(--cream)!important;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center}
+  .modal-x{font-size:22px;padding:4px 10px;color:var(--cream)!important;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
   .modal-body{
     padding:14px 16px;
     overflow-y:auto;-webkit-overflow-scrolling:touch;
     overflow-wrap:break-word;word-break:break-word;
     max-height:calc(88vh - 52px)
+  }
+  /* Show bottom close button on mobile */
+  .modal-close-mobile{
+    display:block;width:100%;margin-top:20px;
+    padding:12px;font-size:13px;letter-spacing:3px;
+    border:1px solid var(--border);color:var(--muted);
+    background:transparent;font-family:'Courier Prime',monospace
   }
 
   /* Evidence inspect */
@@ -713,16 +726,17 @@ body:hover #cur .ring{width:28px;height:28px}
 
 <!-- ══ MODALS ════════════════════════════════════ -->
 
-<div class="overlay" id="m-ev"><div class="modal" id="m-ev-box" style="width:540px">
+<div class="overlay" id="m-ev" onclick="closeM('m-ev')"><div class="modal" id="m-ev-box" style="width:540px" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title" id="mev-title"></div><button class="modal-x" onclick="closeM('m-ev')">✕</button></div>
   <div class="modal-body">
     <div class="ev-inspect-tag" id="mev-tag"></div>
     <div class="ev-inspect-desc" id="mev-desc"></div>
     <div class="ev-inspect-analysis" id="mev-analysis"></div>
+    <button class="btn btn-outline modal-close-mobile" onclick="closeM('m-ev')">✕ CLOSE</button>
   </div>
 </div></div>
 
-<div class="overlay" id="m-interr"><div class="modal" id="m-interr-box" style="width:760px;height:580px">
+<div class="overlay" id="m-interr" onclick="closeM('m-interr')"><div class="modal" id="m-interr-box" style="width:760px;height:580px" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title">INTERROGATION ROOM</div><button class="modal-x" onclick="closeM('m-interr')">✕</button></div>
   <div class="modal-body" style="padding:0;overflow:hidden">
     <div class="interr-body">
@@ -750,7 +764,7 @@ body:hover #cur .ring{width:28px;height:28px}
   </div>
 </div></div>
 
-<div class="overlay" id="m-accuse"><div class="modal" style="width:760px">
+<div class="overlay" id="m-accuse" onclick="closeM('m-accuse')"><div class="modal" style="width:760px" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title">MAKE YOUR ARREST</div><button class="modal-x" onclick="closeM('m-accuse')">✕</button></div>
   <div class="modal-body">
     <div class="accuse-step active" id="acc-step1">
@@ -769,7 +783,7 @@ body:hover #cur .ring{width:28px;height:28px}
   </div>
 </div></div>
 
-<div class="overlay" id="m-help"><div class="modal" style="width:700px">
+<div class="overlay" id="m-help" onclick="closeM('m-help')"><div class="modal" style="width:700px" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title">How to Play DETECTIVE.PK</div><button class="modal-x" onclick="closeM('m-help')">✕</button></div>
   <div class="modal-body">
     <div class="help-intro">You are a detective investigating a murder. Gather evidence, interrogate suspects, and make your arrest before time runs out. Every clue matters — read carefully.</div>
@@ -835,7 +849,7 @@ body:hover #cur .ring{width:28px;height:28px}
   </div>
 </div></div>
 
-<div class="overlay" id="m-key"><div class="modal" style="width:460px">
+<div class="overlay" id="m-key" onclick="closeM('m-key')"><div class="modal" style="width:460px" onclick="event.stopPropagation()">
   <div class="modal-hd"><div class="modal-title">Anthropic API Key</div><button class="modal-x" onclick="closeM('m-key')">✕</button></div>
   <div class="modal-body">
     <input class="key-input" id="key-input" type="password" placeholder="sk-ant-..." onkeydown="if(event.key==='Enter')G.saveKey()">
