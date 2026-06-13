@@ -65,6 +65,9 @@ body:hover #cur .ring{width:28px;height:28px}
 .case-card::after{content:'';position:absolute;top:0;right:0;width:28px;height:28px;background:var(--bg);clip-path:polygon(0 0,100% 100%,100% 0)}
 .case-card:not(.locked):hover{border-color:rgba(240,192,64,.6);transform:translateY(-5px) rotate(-.3deg);box-shadow:0 24px 48px rgba(0,0,0,.6)}
 .case-card.locked{opacity:.55;filter:grayscale(.4)}
+.case-card.exclusive{border-color:rgba(193,57,43,.55)}
+.case-card.exclusive:not(.locked):hover{border-color:rgba(193,57,43,.9)!important;box-shadow:0 28px 56px rgba(193,57,43,.35)!important}
+.nightmare-badge{display:inline-block;font-family:'Courier Prime',monospace;font-size:9px;color:var(--red);letter-spacing:3px;border:1px solid rgba(193,57,43,.45);padding:3px 8px;margin-bottom:14px}
 .case-num{font-size:11px;color:var(--muted);letter-spacing:4px;margin-bottom:14px}
 .case-title{font-family:'Playfair Display',serif;font-size:23px;color:var(--cream);margin-bottom:8px;line-height:1.3}
 .case-victim{font-size:13px;color:var(--red);letter-spacing:2px;margin-bottom:6px}
@@ -612,6 +615,15 @@ body:hover #cur .ring{width:28px;height:28px}
       <div class="case-victim">VICTIM: Hamza Sheikh</div>
       <div class="case-loc">Iqra Hostel, Room 214 · Karachi · 2026</div>
       <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card exclusive" id="cc007" onclick="G.openCase('C007')">
+      <div class="case-num">CASE FILE 007 — EXCLUSIVE</div>
+      <div class="nightmare-badge">NIGHTMARE TIER</div>
+      <div class="case-title">The Midnight Biryani</div>
+      <div class="case-victim">VICTIM: Adnan Bhatti</div>
+      <div class="case-loc">Shah Ji Biryani · Walled City, Lahore · 2026</div>
+      <div class="case-btn open">◆ OPEN FILE</div>
     </div>
 
   </div>
@@ -1601,6 +1613,121 @@ C006:{
      }
     }
   ]
+},
+
+C007:{
+  id:'C007',title:'The Midnight Biryani',
+  victim:'Adnan Bhatti, 34',location:'Shah Ji Biryani, Food Street, Walled City, Lahore',
+  killerId:'imran',
+  method:'Organophosphate pesticide injected through the foil lid of a foam box intended for a different customer',
+  briefText:`Nobody dies a stranger at Shah Ji's. Fifty years of midnight biryani, one steaming degh, and a crowd that never thins until the last plate is gone. At 12:43 AM, Adnan Bhatti — a property dealer with a long list of people who wanted him gone — took three bites of chicken biryani at Table 3, clutched his chest, and was dead before the ambulance crossed Bhati Gate. Foam at the lips. A toppled glass of Rooh Afza. A half-eaten white foam box still warm in front of him. The police list of suspects wrote itself within the hour: a swindled investor, a feuding brother-in-law, a creditor he'd been ducking for months. Everyone in that alley had a reason to want Adnan Bhatti dead. That is the first lie this case will tell you. Because when the lab finished with that foam box, it revealed a truth that turns the entire investigation inside out: the poison was never meant for Adnan at all.`,
+  story:`Imran Shah did not take a night job ladling rice for the money. Two years ago his younger sister — married to Shahzad Bhatti — died of "accidental burns". Her family screamed murder; the FIR was buried, the in-laws paid someone off, and Shahzad walked free. Imran swore in open court that he would get justice. Then he disappeared into the most invisible job he could find: the counter hand at the stall where Shahzad eats every single Thursday at midnight, the same order every time — extra egg, no raita. This Thursday, Imran loaded a syringe of pesticide and injected it through the foil lid of the box prepared for Shahzad's token. He knew the scheduled load-shedding blackout would kill the lights and the cameras at 12:41 for a minute and a half — long enough for the marked box to be carried off in the dark. It was. But Adnan Bhatti — Shahzad's cousin at the same table — picked up the wrong box when the lights died. Imran watched the wrong man eat and said nothing. The abuser he came to kill is alive and unharmed. An innocent cousin is dead. And the avenger is now the murderer.`,
+  hotspots:[
+    {id:'e1',x:'55%',y:'48%',icon:'📦',label:'TABLE 3 — BOX',
+     name:'One Box, One Puncture',tag:'FORENSIC',
+     desc:`Toxicology and packaging analysis, Punjab Forensic Science Agency.`,
+     analysis:`Cause of death: acute organophosphate (pesticide) poisoning — fast and violent. The poison was found ONLY in Adnan's foam box, introduced through a single fine syringe puncture in the foil lid. The degh, the shared raita, every other plate that night: clean. This was one box, deliberately injected, meant for one person.`},
+    {id:'e2',x:'38%',y:'60%',icon:'🥚',label:'BOX CONTENTS',
+     name:"The Order That Wasn't His",tag:'PHYSICAL',
+     desc:`The contents of the fatal box, cross-checked against statements from the victim's friends.`,
+     analysis:`Adnan hated boiled egg and always ordered "no egg, extra raita" — the waiter confirms this. Yet the box he died eating from contained EXTRA EGG and NO RAITA. The food in front of Adnan was prepared for a completely different customer. He ate someone else's biryani.`},
+    {id:'e3',x:'75%',y:'18%',icon:'📹',label:'CCTV / WAPDA',
+     name:'Ninety Seconds of Darkness',tag:'SURVEILLANCE',
+     desc:`CCTV footage from the stall and the WAPDA load-shedding schedule for that night.`,
+     analysis:`At 12:41 AM a scheduled load-shedding cut plunged the alley into darkness and knocked out the cameras for roughly 90 seconds. In that window, two identical white foam boxes sat side by side on the pickup counter. When power returned, both boxes were gone — collected, in the dark, by the wrong hands.`},
+    {id:'e4',x:'28%',y:'25%',icon:'🎟️',label:'COUNTER / TOKENS',
+     name:'The Thursday Regular',tag:'DOCUMENT',
+     desc:`The stall's token book and the staff's account of regular customers.`,
+     analysis:`The "extra egg, no raita" box was prepared for a standing weekly order: Shahzad Bhatti — Adnan's own cousin — who eats at Shah Ji's every Thursday at midnight and orders the exact same thing without fail. Shahzad was sitting AT Adnan's table that night. The poisoned box was always meant for Shahzad. Adnan was never the target.`},
+    {id:'e5',x:'14%',y:'68%',icon:'📋',label:'BACK COUNTER',
+     name:'A Buried FIR',tag:'DOCUMENT',
+     desc:`An archived police report and a court transcript recovered from provincial records, two years old.`,
+     analysis:`FIR No. 412/24: the young wife of Shahzad Bhatti died of "burns" amid family allegations of murder; the case was quietly closed. The transcript records her brother vowing justice from the dock. That brother changed his life and took a job he had no need for — the night counter at Shah Ji Biryani — the one position that handles every box, knows every regular's order, and stands closest to Shahzad's Thursday ritual.`}
+  ],
+  suspects:[
+    {id:'tariq',name:'Tariq Mughal',role:'Swindled Investor',initials:'TM',stress:35,guilty:false,
+     alibi:'Was three tables away and made no secret of his hatred. The loudest motive in the alley — against Adnan. But this was never about Adnan.',
+     questions:[
+       {id:'q1',text:'You threw a chair at Adnan in his own office. You\'ve cursed him in front of witnesses.',
+        resp:`"And I\'d do it again." He doesn\'t look away. "He sold me a plot that turned out to be triple-sold. My family\'s savings — gone. Yes, I hated him. I\'ve never hidden that."`,stressAdd:18,always:true,asked:false},
+       {id:'q2',text:'You were three tables away when he died. That is not a comfortable distance.',
+        resp:`"Three tables in a food street crowd is twenty people between us. If I was going to kill the man I\'d have done it in his office, not in public, at midnight, in front of fifty witnesses." He leans back. "Test my hands for whatever killed him."`,stressAdd:15,always:true,asked:false},
+       {id:'q3',text:'The box Adnan ate was not his order. Extra egg, no raita — he never ordered that. He ate someone else\'s food.',
+        resp:`"Someone else\'s box." He is quiet a moment. "Then whoever poisoned it wasn\'t targeting Adnan." He looks up. "Who orders extra egg every Thursday?"`,stressAdd:8,needsEv:'e2',asked:false},
+       {id:'q4',text:'The poison was injected through the foil lid at the counter before collection. That requires access behind the serving area.',
+        resp:`"Behind the counter. The counter hand." He says it slowly. "I was never behind that counter in my life." He sits forward. "Find who handles the boxes. That\'s your killer."`,stressAdd:5,needsEv:'e1',asked:false}
+     ],
+     evReactions:{
+       e1:`"One puncture in the foil. Prepared before the box reached the table." He stares at the report. "That\'s not a customer at a table. That\'s someone with a syringe, behind the counter, before the food was ever collected."`,
+       e2:`"He ate someone else\'s biryani. Then the killer wasn\'t after Adnan at all." He goes still. "Who ordered extra egg? Who eats here every Thursday?"`,
+       e3:`"A planned blackout. Cameras off for ninety seconds." He pauses. "Someone who knew the WAPDA schedule. Someone who had both boxes in their hands in the dark."`,
+       e4:`"Shahzad Bhatti. The Thursday regular with the extra egg." He sits back slowly. "So the target was always Shahzad. Not Adnan." He looks at the table. "I wanted Adnan dead. The killer didn\'t."`,
+       e5:`"A buried FIR. His sister." He reads it carefully. "The counter hand. Imran." He goes very still. "He took that job deliberately. Two years he\'s been waiting for a Thursday."`
+     }
+    },
+    {id:'imran',name:'Imran Shah',role:'Counter Hand at Shah Ji Biryani',initials:'IS',stress:6,guilty:true,
+     alibi:'Was behind the counter all night "doing his job" — the one position with hands on every box and knowledge of every regular\'s order.',
+     questions:[
+       {id:'q1',text:'You handled every box that went out tonight. Walk me through the 12:41 window.',
+        resp:`"The lights went. WAPDA cut — it happens every week at that time. I kept the counter steady. When the power came back, the two boxes from the last batch had been collected." He says it calmly. "Customers take their own boxes in the dark. There\'s nothing I can do about that."`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'You\'ve worked this counter for two years. You know every regular\'s order.',
+        resp:`"After two years you remember the faces. Yes." A small pause. "Shahzad Bhatti comes every Thursday. Extra egg, no raita. He\'s been coming since before I joined." He says it without particular emphasis.`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'The box Adnan ate was Shahzad\'s. Extra egg, no raita — Adnan never ordered that. The boxes were swapped in the blackout. You knew exactly which box was which.',
+        resp:`A pause. Not long — but present. "Two identical boxes in the dark. A customer picks up the wrong one." He looks at his hands. "That is not something I arranged."`,stressAdd:38,needsEv:'e2',asked:false},
+       {id:'q4',text:'FIR 412/24. Shahzad Bhatti. Your sister Amna. She died of burns. The case was buried and Shahzad walked free. You stood in that courtroom and swore you\'d get justice.',
+        resp:`He looks at the FIR for a long time. He does not reach for it. "My sister\'s name was Amna. She was twenty-three." A pause. "The court said accidental." Another pause. "I was there."`,stressAdd:55,needsEv:'e5',asked:false},
+       {id:'q5',text:'You loaded a syringe into Shahzad\'s box. You knew about the blackout. You\'ve been waiting two years for a Thursday. The wrong man picked up the wrong box and you said nothing.',
+        resp:`A very long silence. The counter hand's hands are folded on the table. When he speaks it is very quiet and completely without drama. "Shahzad Bhatti burned my sister alive. The court took his money and buried it. I did what I did." He looks up. "I did not know it would be Adnan."`,stressAdd:65,needsEv:'e4',asked:false}
+     ],
+     evReactions:{
+       e1:`"One box. One puncture." He says it without expression. "So it was not the food. It was not the degh. It was prepared specifically." He does not say anything more.`,
+       e2:`"He ate the wrong box." A pause. Longer than the others. "Someone at that table ordered the same thing minus the egg." He looks at the table. "Adnan Bhatti didn\'t know Shahzad\'s order."`,
+       e3:`"The WAPDA schedule is posted in the kitchen. Every stall on the street knows when the load-shedding runs." He says it evenly. "Ninety seconds is a long time in the dark."`,
+       e4:`He looks at the token book. "Shahzad comes every Thursday. He has for years." A pause. "Same seat. Same order. I have served him many times."`,
+       e5:`He looks at the FIR for a long time. He does not look away from it. "They paid the right people. The burns were ruled accidental." A pause. "She was twenty-three." He folds his hands. "I found a job where I could be useful."`
+     }
+    },
+    {id:'naveed',name:'Naveed Bhatti',role:'Brother-in-law',initials:'NB',stress:30,guilty:false,
+     alibi:'Arrived late, ate nothing, left early. Classic lawsuit motive — against Adnan. Another loud dead end.',
+     questions:[
+       {id:'q1',text:'You\'re locked in a lawsuit with the dead man. If he dies, the land defaults to your side.',
+        resp:`"Yes. And I won\'t pretend otherwise." He says it directly. "But consider: if I killed him here, the lawsuit dies with him and becomes a murder investigation. I\'d lose everything including my freedom." He pauses. "I wanted him in court. Not in a coffin."`,stressAdd:18,always:true,asked:false},
+       {id:'q2',text:'You arrived late, argued with Adnan briefly, then left early. What was the argument about?',
+        resp:`"The land. What else. He was stalling the settlement — I told him I\'d see him in court Monday. He told me to enjoy my biryani." He pauses. "Then I left. I ate nothing. I had no appetite."`,stressAdd:12,always:true,asked:false},
+       {id:'q3',text:'Adnan ate the wrong box. Extra egg, no raita — that\'s not his order. He ate someone else\'s biryani.',
+        resp:`"Extra egg." He stops. "That\'s Shahzad\'s order. I\'ve eaten here with him before — he orders the same thing every time." He sits forward. "Adnan ate Shahzad\'s biryani." A pause. "Then Shahzad was the target. Not Adnan."`,stressAdd:8,needsEv:'e2',asked:false},
+       {id:'q4',text:'A buried FIR — Shahzad\'s wife died of burns two years ago. Her brother took a job at this stall.',
+        resp:`"Amna Shah." He recognizes the name. "Shahzad\'s wife. She died — it was ruled accidental but the family..." He stops. "Her brother was at the court. He swore..." He looks up slowly. "Who works the counter here?"`,stressAdd:8,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"One puncture in the foil. That\'s prepared beforehand — at the counter. I was never near the counter. I stood at the table, argued, and left."`,
+       e2:`"Shahzad\'s order. The box was meant for Shahzad." He is quiet. "Then the lawsuit, the land, all of it — irrelevant. Someone else\'s grievance entirely."`,
+       e3:`"A planned blackout. Someone who knew the schedule." He frowns. "The counter staff would know. They\'re there every week."`,
+       e4:`"Shahzad was the target." He says it again slowly. "I have no quarrel with Shahzad. He guaranteed some of Adnan\'s loans but that\'s — that\'s not a reason to kill him." He pauses. "Someone else does."`,
+       e5:`"FIR 412/24. Burns." He reads it. A pause. "The counter hand took a job here specifically." He looks up. "Imran Shah. That\'s the name." Another pause. "How long has he worked the Thursday night shift?"`
+     }
+    },
+    {id:'rizwan',name:'Rizwan Sheikh',role:'Creditor',initials:'RS',stress:22,guilty:false,
+     alibi:'A dead debtor pays nothing. He came to corner Adnan over the money — alive, not dead.',
+     questions:[
+       {id:'q1',text:'Adnan owed you a fortune. You came to this food street specifically to find him tonight.',
+        resp:`"To talk to him. Yes." He spreads his hands. "He\'d been ducking my calls for three months. I knew he ate here. I came to remind him in person that the clock was running." He pauses. "A dead man pays me nothing."`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'Tempers and unpaid lakhs make people lie. How do we know you didn\'t decide collection by other means?',
+        resp:`"Because I am a businessman, not a murderer. And because if I kill my debtors I will never recover a single rupee from anyone, ever again." He says it with the weariness of someone who has explained this before. "I wanted my money. That\'s all."`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'The poison was injected into the box before it reached the table. A customer couldn\'t have done that.',
+        resp:`"A syringe through the foil. That\'s not a table move — that\'s done at the counter, with time and access." He looks up. "I was never behind that counter. I sat at the far end and waited for Adnan to finish arguing."`,stressAdd:6,needsEv:'e1',asked:false},
+       {id:'q4',text:'The poisoned box was Shahzad\'s order, not Adnan\'s. Adnan was never the target. You had no motive against Shahzad.',
+        resp:`"Shahzad?" He frowns. "I know Shahzad — he used to guarantee Adnan\'s loans. I have no grievance with him at all." He is quiet a moment. "Then whoever did this wasn\'t after Adnan\'s money. They had a completely different reason." He looks up. "Who did Shahzad wrong?"`,stressAdd:5,needsEv:'e4',asked:false}
+     ],
+     evReactions:{
+       e1:`"One box. One syringe puncture. Prepared at the counter before distribution." He nods. "Whoever did this knew exactly which box to mark and had access to do it. That\'s the counter staff."`,
+       e2:`"He ate Shahzad\'s food. So Adnan dying was an accident — the killer\'s accident." He pauses. "The intended victim is still alive and was at that table."`,
+       e3:`"A planned blackout to cover the swap." He thinks. "Someone on the counter would know the WAPDA schedule down to the minute."`,
+       e4:`"The Thursday regular. Shahzad Bhatti." He is quiet. "I have no quarrel with Shahzad. But someone does — badly enough to plan for two years." He looks at the token book. "The counter hand knew Shahzad\'s order better than anyone."`,
+       e5:`"FIR 412/24. The wife. The brother." He reads it carefully. "Imran Shah took a job he didn\'t need, at this exact stall, two years ago." He sets the paper down. "He was always waiting for a Thursday."`
+     }
+    }
+  ]
 }
 };
 
@@ -1784,7 +1911,7 @@ const G={
 
   boot(){
     Audio.init();
-    const lines=['> DETECTIVE.PK SYSTEM v2.0','> PAKISTAN CRIMINAL INVESTIGATION BUREAU','> LOADING CLASSIFIED DATABASE...','> [████████████████] 100%','> 6 ACTIVE CASES — 0 CLASSIFIED','> AI INTERROGATION: STANDBY','> INITIALISING INTERFACE...'];
+    const lines=['> DETECTIVE.PK SYSTEM v2.0','> PAKISTAN CRIMINAL INVESTIGATION BUREAU','> LOADING CLASSIFIED DATABASE...','> [████████████████] 100%','> 7 ACTIVE CASES — 0 CLASSIFIED','> AI INTERROGATION: STANDBY','> INITIALISING INTERFACE...'];
     const el=document.getElementById('boot-lines');
     let delay=500;
     lines.forEach((l,i)=>{
@@ -1928,6 +2055,14 @@ const G={
         {s:'left:4%;top:38%;width:18%;height:20%',t:'STUDY DESK'},
         {s:'left:40%;top:65%;width:22%;height:16%',t:'KETTLE / TEA'},
         {s:'left:66%;top:62%;width:16%;height:20%',t:'WARDROBE'},
+      ],
+      C007:[
+        {s:'left:4%;top:5%;width:18%;height:28%',t:'DEGH (POT)'},
+        {s:'left:4%;top:38%;width:32%;height:12%',t:'COUNTER'},
+        {s:'left:28%;top:55%;width:38%;height:22%',t:'TABLE 3'},
+        {s:'right:3%;top:4%;width:6%;height:10%',t:'CCTV'},
+        {s:'left:60%;top:28%;width:14%;height:20%',t:'FOAM BOXES'},
+        {s:'right:3%;top:62%;width:20%;height:18%',t:'TOKEN BOARD'},
       ]
     };
     // Floor line for perspective
@@ -2126,7 +2261,8 @@ const G={
       C003:['The surgeon\'s report tells you when — now ask who couldn\'t have been on the dance floor at that moment.','The victim emailed his lawyer at 9:52 PM. That email names the motive and narrows the suspects to one.','The killer staged a break-in but forgot about the garden path. Check what\'s on someone\'s shoes.'],
       C004:['The post-mortem rewrites everything — the judge died two hours before anyone claims to have heard him alive.','No live cricket is broadcast at midnight. The sound the neighbour heard was a recording played from inside the lodge.','Only one person has the key to the staff quarters and the intercom panel. Find who controls the audio system.'],
       C005:['The autopsy found a sedative in his blood — he was unconscious before the trick began. Stop looking at the tank.','The throat spray was prepared and handed to him by one person for twenty years. Find who filled that bottle.','A playbill in the valet\'s locker predates Sikandar\'s entire career. The illusion has a different creator — and a different name.'],
-      C006:['The toxicology onset window is 30-90 minutes — work backwards from 8:40 AM to find when Hamza was actually poisoned.','The bus drink and the bus stop juice both tested clean. The bus is a dead end. The murder happened before he left the hostel.','Hamza skipped the mess canteen that morning. The only thing he consumed was tea with honey in Room 214 — laced by the one person who never touches honey.']
+      C006:['The toxicology onset window is 30-90 minutes — work backwards from 8:40 AM to find when Hamza was actually poisoned.','The bus drink and the bus stop juice both tested clean. The bus is a dead end. The murder happened before he left the hostel.','Hamza skipped the mess canteen that morning. The only thing he consumed was tea with honey in Room 214 — laced by the one person who never touches honey.'],
+      C007:['The box Adnan ate contained extra egg and no raita — he never ordered that. Find whose standing order it matches and you find the real target.','A scheduled 90-second WAPDA blackout killed the cameras at 12:41. Someone who knew that timetable had time to ensure the wrong box reached the wrong hands.','Stop investigating Adnan\'s enemies. A buried FIR from two years ago points to a different victim, a different motive, and the one man whose job put his hands on every box that night.']
     };
     const hint=(hints[c.id]||[])[this.cs.hintsUsed]||'Review all evidence carefully before making your arrest.';
     this.cs.hintsUsed++;this.cs.hintsLeft--;
