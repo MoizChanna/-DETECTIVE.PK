@@ -99,12 +99,12 @@ body:hover #cur .ring{width:28px;height:28px}
 
 /* ── INVESTIGATION ── */
 #s-inv{background:var(--bg);overflow:hidden}
-.inv-hud{display:flex;align-items:center;gap:14px;padding:11px 20px;background:var(--ink);border-bottom:1px solid var(--border);flex-shrink:0}
-/* Row wrappers — display:contents makes them invisible to flexbox on desktop */
-.hud-row1,.hud-row2{display:contents}
+.inv-hud{display:flex;flex-direction:column;gap:0;background:var(--ink);border-bottom:1px solid var(--border);flex-shrink:0}
+.hud-row1{display:flex;align-items:center;gap:12px;padding:8px 20px;width:100%}
+.hud-row2{display:flex;align-items:center;gap:10px;padding:4px 20px 8px;width:100%;border-top:1px solid rgba(232,226,212,.08)}
 .hud-case{font-size:11px;color:var(--amber);letter-spacing:3px}
 .hud-sep{color:var(--dim)}
-.hud-title{font-family:'Special Elite',cursive;font-size:15px;color:var(--cream);flex:1;letter-spacing:2px}
+.hud-title{font-family:'Special Elite',cursive;font-size:15px;color:var(--cream);flex:1;letter-spacing:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .hud-stat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
 .hud-stat b{color:var(--amber);font-size:13px}
 .hud-btn{padding:7px 16px;font-size:11px;letter-spacing:2px;border:1px solid;font-family:'Courier Prime',monospace;transition:all .2s;background:transparent;white-space:nowrap}
@@ -193,7 +193,7 @@ body:hover #cur .ring{width:28px;height:28px}
 .modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);flex:1}
 .modal-x{background:none;border:none;color:var(--dim);font-size:20px;padding:2px 8px;transition:color .2s}
 .modal-x:hover{color:var(--red)}
-.modal-body{padding:26px;overflow-y:auto;flex:1}
+.modal-body{padding:26px;overflow-y:auto;flex:1;overflow-wrap:break-word;word-break:break-word}
 
 /* Evidence inspect modal */
 #m-ev{width:580px}
@@ -334,39 +334,30 @@ body:hover #cur .ring{width:28px;height:28px}
   .arch-footer button{padding:8px 12px;font-size:9px;margin-bottom:8px}
 
   /* ── BRIEFING ── */
-  #s-brief{overflow-y:auto}
-  .brief-body{grid-template-columns:1fr;overflow-y:visible;height:auto}
-  .brief-col{padding:20px 18px}
+  #s-brief{overflow-y:auto;overflow-x:hidden}
+  .brief-tape{padding:8px 16px;font-size:10px}
+  .brief-body{grid-template-columns:1fr;flex:0 0 auto;height:auto;overflow:visible}
+  .brief-col{padding:20px 18px;overflow:visible;height:auto}
   .brief-col:first-child{border-right:none;border-bottom:1px solid var(--border)}
-  .brief-title{font-size:20px;letter-spacing:3px}
-  .brief-body-text{font-size:12px;line-height:1.8}
+  .brief-title{font-size:22px;letter-spacing:2px}
+  .brief-victim{font-size:12px;margin-bottom:16px}
+  .brief-body-text{font-size:12px;line-height:1.8;word-break:break-word}
   .brief-li{font-size:11px}
-  .brief-actions{flex-direction:column;padding:14px 18px;gap:10px}
+  .brief-actions{flex-direction:column;padding:14px 18px;gap:10px;position:sticky;bottom:0}
   .brief-actions .btn{width:100%;text-align:center;padding:12px}
 
-  /* ── INVESTIGATION HUD — 2-row layout ── */
-  .inv-hud{flex-direction:column;padding:0;gap:0}
-  .hud-row1{
-    display:flex;align-items:center;gap:10px;
-    padding:8px 12px;width:100%;
-    overflow:hidden
-  }
-  .hud-row2{
-    display:flex;align-items:center;gap:6px;
-    padding:5px 8px 7px;width:100%;
-    border-top:1px solid rgba(232,226,212,.1);
-    overflow-x:auto;-webkit-overflow-scrolling:touch
-  }
+  /* ── INVESTIGATION HUD — scale rows for mobile ── */
+  .hud-row1{padding:7px 10px;gap:8px}
+  .hud-row2{padding:4px 8px 6px;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .hud-row2::-webkit-scrollbar{display:none}
-  .hud-title{
-    flex:1;min-width:0;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    font-size:12px;letter-spacing:1px
-  }
+  .hud-title{font-size:12px;letter-spacing:1px}
   .hud-case{font-size:9px;flex-shrink:0}
   .hud-sep{flex-shrink:0}
   .hud-stat{font-size:10px;white-space:nowrap;flex-shrink:0}
   .hud-btn{padding:5px 9px;font-size:9px;letter-spacing:1px;flex-shrink:0;white-space:nowrap}
+  /* MAKE ARREST — bigger & red-tinted so it's always obvious */
+  .hud-btn.accuse{padding:6px 12px;font-size:10px;font-weight:bold;letter-spacing:1.5px;background:rgba(193,57,43,.12)}
+  .hud-btn.accuse:not(:disabled){background:rgba(193,57,43,.22);animation:none!important}
 
   /* ── TABS ── */
   .inv-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
@@ -403,20 +394,35 @@ body:hover #cur .ring{width:28px;height:28px}
   /* ── DEDUCTION BOARD ── */
   .board-btns{bottom:8px;right:8px;gap:6px}
   .b-btn{padding:7px 10px;font-size:9px;letter-spacing:1px}
-  .b-card{width:90px}
-  .b-photo{width:80px;height:62px;font-size:22px}
-  .b-caption{font-size:7px}
+  /* Cards sized to match JS mobile layout (W=60) */
+  .b-card{width:60px}
+  .b-photo{width:52px;height:42px;font-size:16px}
+  .b-caption{font-size:6px;line-height:1.3}
+  .b-pin{width:9px;height:9px;top:-6px}
 
   /* ── MODALS — full screen on mobile ── */
   .overlay{align-items:flex-end}
   .modal{
     width:100%!important;max-width:100%!important;
-    max-height:92vh;border-radius:0;
-    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)
+    max-height:88vh;border-radius:0;
+    clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+    overflow:hidden
   }
-  .modal-hd{padding:14px 16px}
-  .modal-title{font-size:16px}
-  .modal-body{padding:16px}
+  .modal-hd{
+    padding:12px 16px;
+    position:sticky;top:0;z-index:2;
+    background:var(--ink);
+    flex-shrink:0
+  }
+  .modal-title{font-size:15px}
+  /* Make ✕ close button large and easy to tap */
+  .modal-x{font-size:24px;padding:4px 10px;color:var(--cream)!important;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center}
+  .modal-body{
+    padding:14px 16px;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    overflow-wrap:break-word;word-break:break-word;
+    max-height:calc(88vh - 52px)
+  }
 
   /* Evidence inspect */
   .ev-inspect-desc{font-size:12px}
@@ -1197,17 +1203,20 @@ const Board={
     this.cards.set(item.id,{el,type});
   },
   layout(){
-    if(this._laid)return;this._laid=true;
     const bw=this.wrap.clientWidth,bh=this.wrap.clientHeight;
-    const W=120,GAP=24;
+    if(this._laid&&Math.abs(bw-(this._lastBw||0))<10)return;
+    this._laid=true;this._lastBw=bw;
+    const mobile=bw<520;
+    const W=mobile?60:120,GAP=mobile?8:24;
     const evCards=[...this.cards.entries()].filter(([,v])=>v.type==='ev');
     const susCards=[...this.cards.entries()].filter(([,v])=>v.type==='sus');
     const placeRow=(cards,yFrac)=>{
-      const n=cards.length,rowW=n*W+(n-1)*GAP,sx=(bw-rowW)/2,y=bh*yFrac;
+      const n=cards.length,rowW=n*W+(n-1)*GAP;
+      const sx=Math.max(6,(bw-rowW)/2),y=bh*yFrac;
       cards.forEach(([,c],i)=>{c.el.style.left=(sx+i*(W+GAP))+'px';c.el.style.top=y+'px'});
     };
-    placeRow(evCards,0.08);
-    placeRow(susCards,0.58);
+    placeRow(evCards,0.06);
+    placeRow(susCards,0.55);
     this.draw();
   },
   mv(e){
