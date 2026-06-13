@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DETECTIVE.PK</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--ink:#0e0c17;--ink2:#14111f;--ink3:#1c182a;
+  --cream:#e8e2d4;--muted:#b2b2aa;--dim:#767680;
+  --red:#c1392b;--green:#4ade80;--amber:#f0c040;
+  --ghost:rgba(232,226,212,0.06);--border:rgba(232,226,212,0.18);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospace}
+*{cursor:none!important}
+
+/* ── CURSOR ── */
+#cur{position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .1s}
+#cur .ring{width:22px;height:22px;border:1px solid rgba(74,222,128,.7);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:all .15s}
+#cur .dot{width:3px;height:3px;background:var(--green);border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+#cur .ch{position:absolute;background:rgba(74,222,128,.5);transform:translate(-50%,-50%)}
+#cur .ch.h{width:14px;height:1px}
+#cur .ch.v{width:1px;height:14px}
+body:hover #cur .ring{width:28px;height:28px}
+
+/* ── OVERLAYS ── */
+#canvas-bg{position:fixed;inset:0;pointer-events:none;z-index:1}
+.vignette{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.9) 100%);pointer-events:none;z-index:2}
+.scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0,rgba(0,0,0,.025) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:3}
+.grain{position:fixed;inset:0;opacity:.04;pointer-events:none;z-index:4;animation:grain .07s steps(1) infinite}
+@keyframes grain{0%{background-position:0 0}25%{background-position:15px 8px}50%{background-position:-8px 15px}75%{background-position:8px -8px}}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;z-index:10}
+.screen.active{display:flex}
+.screen.enter{animation:slideIn .35s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes slideIn{from{opacity:0;transform:scale(.97) translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── BOOT ── */
+#s-boot{background:var(--bg);align-items:center;justify-content:center;gap:0}
+.cctv-top{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:12px}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.rec-lbl{font-size:12px;color:rgba(74,222,128,.8);letter-spacing:3px}
+.cctv-id{position:absolute;top:18px;right:20px;font-size:11px;color:rgba(74,222,128,.7);letter-spacing:2px}
+.boot-logo{font-family:'Special Elite',cursive;font-size:52px;color:var(--cream);letter-spacing:8px;margin-bottom:8px;opacity:0;animation:fadeUp 1s 2.2s forwards}
+.boot-sub{font-size:12px;color:var(--muted);letter-spacing:5px;margin-bottom:28px;opacity:0;animation:fadeUp .8s 2.6s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.boot-lines{width:480px;max-width:90vw;font-size:14px;color:var(--green);line-height:2.1}
+.bline{opacity:0;animation:blineIn .25s forwards}
+@keyframes blineIn{to{opacity:1}}
+.bcursor{display:inline-block;width:7px;height:14px;background:var(--green);margin-left:2px;animation:blink .6s steps(1) infinite;vertical-align:middle}
+
+/* ── ARCHIVE ── */
+#s-archive{background:var(--bg);overflow-y:auto;padding:48px 60px}
+.arch-header{text-align:center;margin-bottom:52px}
+.arch-logo{font-family:'Special Elite',cursive;font-size:62px;color:var(--cream);letter-spacing:10px;text-shadow:0 0 60px rgba(232,226,212,.1)}
+.arch-logo span{color:var(--red)}
+.arch-tagline{font-size:12px;color:var(--muted);letter-spacing:5px;margin-top:10px}
+.arch-divider{width:240px;height:1px;background:linear-gradient(90deg,transparent,var(--dim),transparent);margin:24px auto}
+.cases-row{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.case-card{width:280px;background:var(--ink);border:1px solid var(--border);padding:30px;position:relative;transition:all .3s;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.case-card::after{content:'';position:absolute;top:0;right:0;width:28px;height:28px;background:var(--bg);clip-path:polygon(0 0,100% 100%,100% 0)}
+.case-card:not(.locked):hover{border-color:rgba(240,192,64,.6);transform:translateY(-5px) rotate(-.3deg);box-shadow:0 24px 48px rgba(0,0,0,.6)}
+.case-card.locked{opacity:.55;filter:grayscale(.4)}
+.case-num{font-size:11px;color:var(--muted);letter-spacing:4px;margin-bottom:14px}
+.case-title{font-family:'Playfair Display',serif;font-size:23px;color:var(--cream);margin-bottom:8px;line-height:1.3}
+.case-victim{font-size:13px;color:var(--red);letter-spacing:2px;margin-bottom:6px}
+.case-loc{font-size:12px;color:var(--muted);margin-bottom:18px}
+.case-btn{display:inline-block;padding:8px 18px;font-size:11px;letter-spacing:3px;border:1px solid;font-family:'Courier Prime',monospace}
+.case-btn.open{color:var(--green);border-color:var(--green)}
+.case-btn.locked-btn{color:var(--red);border-color:var(--red)}
+.classified{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.classified span{font-family:'Special Elite',cursive;font-size:26px;color:var(--red);border:3px solid var(--red);padding:6px 14px;transform:rotate(-14deg);opacity:.65;letter-spacing:5px}
+.shake{animation:shk .4s}
+@keyframes shk{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.arch-footer{text-align:center;margin-top:48px;font-size:12px;color:var(--muted);letter-spacing:2px}
+.arch-footer button{background:none;border:1px solid var(--dim);color:var(--muted);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;padding:8px 16px;margin-right:12px;transition:all .2s}
+.arch-footer button:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ── BRIEFING ── */
+#s-brief{background:var(--ink);overflow:hidden}
+.brief-tape{background:var(--amber);color:#1a0f00;font-size:11px;font-weight:700;letter-spacing:5px;padding:9px 24px;text-align:center;flex-shrink:0}
+.brief-body{flex:1;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.brief-col{padding:40px;overflow-y:auto}
+.brief-col:first-child{border-right:1px solid var(--border)}
+.brief-tag{font-size:11px;color:var(--amber);letter-spacing:4px;margin-bottom:14px}
+.brief-title{font-family:'Playfair Display',serif;font-size:36px;color:var(--cream);line-height:1.2;margin-bottom:8px}
+.brief-victim{font-size:14px;color:var(--red);letter-spacing:2px;margin-bottom:28px}
+.brief-body-text{font-size:14px;color:var(--muted);line-height:2;margin-bottom:28px;min-height:80px}
+.brief-cursor{display:inline-block;width:7px;height:14px;background:var(--muted);animation:blink .7s steps(1) infinite;margin-left:1px;vertical-align:middle}
+.sec-head{font-size:11px;color:var(--amber);letter-spacing:4px;margin-bottom:12px;border-bottom:1px solid rgba(240,192,64,.25);padding-bottom:6px}
+.brief-list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.brief-li{display:flex;gap:10px;font-size:13px;color:var(--muted)}
+.brief-li::before{content:'▸';color:var(--red);flex-shrink:0}
+.brief-actions{display:flex;gap:14px;padding:20px 40px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+
+/* ── INVESTIGATION ── */
+#s-inv{background:var(--bg);overflow:hidden}
+.inv-hud{display:flex;align-items:center;gap:14px;padding:11px 20px;background:var(--ink);border-bottom:1px solid var(--border);flex-shrink:0}
+.hud-case{font-size:11px;color:var(--amber);letter-spacing:3px}
+.hud-sep{color:var(--dim)}
+.hud-title{font-family:'Special Elite',cursive;font-size:15px;color:var(--cream);flex:1;letter-spacing:2px}
+.hud-stat{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.hud-stat b{color:var(--amber);font-size:13px}
+.hud-btn{padding:7px 16px;font-size:11px;letter-spacing:2px;border:1px solid;font-family:'Courier Prime',monospace;transition:all .2s;background:transparent;white-space:nowrap}
+.hud-btn.hint{color:var(--amber);border-color:var(--amber)}
+.hud-btn.hint:hover:not(:disabled){background:rgba(240,192,64,.1)}
+.hud-btn.accuse{color:var(--red);border-color:var(--red);font-weight:bold}
+.hud-btn.accuse:not(:disabled){animation:acculse-pulse 2s ease-in-out infinite}
+@keyframes acculse-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 12px rgba(193,57,43,.4)}}
+.hud-btn.accuse:hover:not(:disabled){background:rgba(193,57,43,.15)}
+.hud-btn.help{color:var(--green);border-color:rgba(74,222,128,.5)}
+.hud-btn.help:hover{background:rgba(74,222,128,.08)}
+.hud-btn:disabled{opacity:.3;animation:none}
+.inv-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--ink2)}
+.tab{padding:12px 28px;font-size:11px;letter-spacing:3px;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+.tab:hover:not(.active){color:var(--cream)}
+.inv-content{flex:1;overflow:hidden;position:relative}
+.tab-panel{position:absolute;inset:0;display:none;overflow:auto}
+.tab-panel.active{display:flex;flex-direction:column}
+
+/* ── CRIME SCENE ── */
+.scene-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 28px;flex-direction:column;gap:6px}
+.scene-meta{display:flex;justify-content:space-between;align-items:center;width:700px;max-width:100%;padding:0 2px}
+.room-label{font-size:11px;color:var(--muted);letter-spacing:3px}
+.room-found{font-size:13px;color:var(--amber);letter-spacing:2px;font-weight:bold}
+.scene-room{position:relative;width:700px;max-width:100%;height:400px;background:var(--ink2);border:1px solid rgba(232,226,212,.12);overflow:hidden}
+.room-deco{position:absolute;border:1px solid rgba(232,226,212,.08);background:rgba(232,226,212,.025);pointer-events:none;border-radius:1px}
+.room-floor-line{position:absolute;bottom:28%;left:0;right:0;height:1px;background:rgba(232,226,212,.04);pointer-events:none}
+.scene-tip{font-size:12px;color:var(--dim);letter-spacing:2px;text-align:center;padding:4px 0}
+.wall-detail{position:absolute;background:rgba(232,226,212,.04)}
+.hotspot{position:absolute;transform:translate(-50%,-50%);text-align:center;z-index:5}
+.hotspot.found .hs-ring{border-color:rgba(74,222,128,.4);animation:none}
+.hotspot.found .hs-inner{background:rgba(74,222,128,.18);border-color:rgba(74,222,128,.6)}
+.hs-ring{width:54px;height:54px;border:1.5px solid rgba(193,57,43,.65);border-radius:50%;position:absolute;transform:translate(-50%,-50%) scale(1);animation:pulse 2s ease-in-out infinite;top:50%;left:50%}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.45);opacity:.2}}
+.hs-inner{width:40px;height:40px;border-radius:50%;background:rgba(193,57,43,.13);border:1.5px solid rgba(193,57,43,.55);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;position:relative;z-index:2;box-shadow:0 0 10px rgba(193,57,43,.15)}
+.hotspot:not(.found):hover .hs-inner{background:rgba(193,57,43,.3);border-color:var(--red);transform:scale(1.15);box-shadow:0 0 18px rgba(193,57,43,.35)}
+.hs-label{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:30px;white-space:nowrap;background:rgba(10,10,15,.7);padding:2px 6px;border-radius:2px}
+.hotspot.found .hs-label{color:var(--green)}
+
+/* ── EVIDENCE LOCKER ── */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px;padding:28px}
+.ev-card{background:var(--ink2);border:1px solid var(--border);padding:20px;transition:all .2s;position:relative;opacity:.35}
+.ev-card.found{opacity:1}
+.ev-card.found:hover{border-color:rgba(74,222,128,.5);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.ev-icon{font-size:32px;margin-bottom:12px}
+.ev-name{font-size:13px;color:var(--cream);letter-spacing:1px;line-height:1.4;margin-bottom:6px}
+.ev-tag{font-size:11px;color:var(--amber);letter-spacing:2px}
+.ev-card:not(.found)::after{content:'UNEXAMINED';position:absolute;inset:0;background:rgba(10,10,15,.65);display:grid;place-items:center;font-size:11px;color:var(--dim);letter-spacing:3px}
+
+/* ── SUSPECTS ── */
+.suspects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;padding:28px}
+.sus-card{background:var(--ink2);border:1px solid var(--border);padding:22px;transition:all .2s;position:relative}
+.sus-card.interrogated{border-color:rgba(74,222,128,.35)}
+.sus-card:hover{border-color:rgba(232,226,212,.3);transform:translateY(-2px)}
+.sus-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--ink3),var(--ink2));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);margin-bottom:14px}
+.sus-name{font-family:'Playfair Display',serif;font-size:17px;color:var(--cream);margin-bottom:4px}
+.sus-role{font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:12px}
+.sus-alibi{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;border-left:2px solid var(--border);padding-left:12px}
+.stress-bar{height:5px;background:rgba(232,226,212,.08);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.stress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));transition:width .8s}
+.sus-btn{width:100%;padding:10px;font-size:11px;letter-spacing:2px;border:1px solid var(--dim);color:var(--muted);background:transparent;font-family:'Courier Prime',monospace;transition:all .2s}
+.sus-btn:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ── DEDUCTION BOARD ── */
+.board-wrap{flex:1;position:relative;background:var(--ink2);background-image:repeating-linear-gradient(0deg,rgba(232,226,212,.025) 0,rgba(232,226,212,.025) 1px,transparent 1px,transparent 44px),repeating-linear-gradient(90deg,rgba(232,226,212,.025) 0,rgba(232,226,212,.025) 1px,transparent 1px,transparent 44px)}
+#board-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.b-card{position:absolute;width:112px;z-index:3;user-select:none}
+.b-card.sel{z-index:10;filter:drop-shadow(0 0 10px rgba(240,192,64,.6))}
+.b-card-inner{background:var(--cream);padding:5px 5px 20px;box-shadow:3px 4px 14px rgba(0,0,0,.7)}
+.b-photo{width:102px;height:76px;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,#1a1020,#0e0a18)}
+.b-caption{font-size:9px;color:#1a0f00;margin-top:5px;text-align:center;font-family:'Courier Prime',monospace;line-height:1.4;word-break:break-word}
+.b-pin{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:var(--amber);border:1px solid #b08c00;box-shadow:0 2px 4px rgba(0,0,0,.5);z-index:4}
+.board-btns{position:absolute;bottom:14px;right:14px;display:flex;gap:8px;z-index:10}
+.b-btn{padding:8px 14px;font-size:11px;letter-spacing:2px;border:1px solid;font-family:'Courier Prime',monospace;background:var(--ink);transition:all .2s}
+.b-btn.conn{color:var(--amber);border-color:var(--amber)}
+.b-btn.conn.on{background:var(--amber);color:#1a0f00}
+.b-btn.clr{color:var(--dim);border-color:var(--dim)}
+.board-tip{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--dim);letter-spacing:2px;z-index:10;white-space:nowrap}
+
+/* ── MODALS ── */
+.overlay{position:fixed;inset:0;background:rgba(10,10,15,.93);z-index:1000;display:none;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--ink);border:1px solid var(--border);display:flex;flex-direction:column;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);max-height:90vh;max-width:95vw}
+.modal-hd{padding:18px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-shrink:0}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--cream);flex:1}
+.modal-x{background:none;border:none;color:var(--dim);font-size:20px;padding:2px 8px;transition:color .2s}
+.modal-x:hover{color:var(--red)}
+.modal-body{padding:26px;overflow-y:auto;flex:1}
+
+/* Evidence inspect modal */
+#m-ev{width:580px}
+.ev-inspect-tag{font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:14px}
+.ev-inspect-desc{font-size:14px;color:var(--muted);line-height:2;margin-bottom:18px}
+.ev-inspect-analysis{background:var(--ghost);border-left:3px solid var(--red);padding:14px 18px;font-size:13px;color:var(--cream);line-height:1.9}
+
+/* Interrogation modal */
+#m-interr{width:760px;height:580px}
+.interr-body{display:grid;grid-template-columns:185px 1fr;height:100%;overflow:hidden}
+.interr-side{padding:20px;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+.interr-portrait{width:110px;height:110px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,var(--ink3),var(--dim));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:32px;color:var(--cream);filter:grayscale(.2)}
+.interr-sname{font-family:'Playfair Display',serif;font-size:16px;color:var(--cream);text-align:center;margin-bottom:4px}
+.interr-srole{font-size:10px;color:var(--muted);letter-spacing:2px;text-align:center;margin-bottom:18px}
+.stress-label{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:6px}
+.stress-bar-lg{height:7px;background:rgba(232,226,212,.08);border-radius:3px;overflow:hidden}
+.stress-fill-lg{height:100%;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));transition:width .9s}
+.stress-pct{font-size:11px;color:var(--amber);text-align:right;margin-top:4px}
+.ev-present-section{margin-top:18px}
+.ev-present-label{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px}
+.ev-pill{padding:7px 10px;font-size:11px;letter-spacing:1px;border:1px solid var(--dim);color:var(--muted);background:transparent;font-family:'Courier Prime',monospace;margin-bottom:5px;width:100%;text-align:left;transition:all .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-pill:hover{border-color:var(--amber);color:var(--cream)}
+.interr-main{display:flex;flex-direction:column;overflow:hidden}
+.chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{padding:12px 16px;font-size:13px;line-height:1.8;max-width:88%}
+.msg.det{background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);align-self:flex-end;border-radius:8px 8px 0 8px;color:var(--cream)}
+.msg.sus{background:var(--ghost);border:1px solid var(--border);align-self:flex-start;border-radius:8px 8px 8px 0;color:var(--muted)}
+.msg.sys{align-self:center;font-size:11px;color:var(--dim);font-style:italic;border:none;background:none;padding:4px}
+.q-section{border-top:1px solid var(--border);padding:14px}
+.q-label{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:10px}
+.q-list{display:flex;flex-direction:column;gap:7px}
+.q-btn{padding:10px 14px;font-size:12px;letter-spacing:.5px;border:1px solid var(--border);color:var(--muted);background:var(--ghost);font-family:'Courier Prime',monospace;text-align:left;transition:all .2s;line-height:1.4}
+.q-btn:hover:not(:disabled){border-color:var(--green);color:var(--cream);background:rgba(74,222,128,.05)}
+.q-btn:disabled{opacity:.3}
+.q-btn.asked{opacity:.4;text-decoration:line-through}
+.q-btn.locked-q{opacity:.3}
+.q-locked-hint{font-size:10px;color:var(--dim);margin-left:6px}
+
+/* Accusation modal */
+#m-accuse{width:780px}
+.accuse-step{display:none}
+.accuse-step.active{display:block}
+.step-title{font-size:12px;color:var(--amber);letter-spacing:3px;margin-bottom:20px}
+.accuse-suspects{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.acc-sus{width:165px;padding:22px 14px;border:1px solid var(--border);text-align:center;transition:all .2s}
+.acc-sus:hover{border-color:var(--red);transform:translateY(-3px)}
+.acc-sus.chosen{border-color:var(--red);background:rgba(193,57,43,.12)}
+.acc-ava{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;background:var(--ink3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;color:var(--cream)}
+.acc-name{font-family:'Playfair Display',serif;font-size:15px;color:var(--cream);margin-bottom:4px}
+.acc-role{font-size:11px;color:var(--muted);letter-spacing:1px}
+.ev-pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.ev-pick{padding:14px;border:1px solid var(--border);transition:all .2s;opacity:.45;text-align:center}
+.ev-pick.have{opacity:1}
+.ev-pick.have:hover{border-color:var(--amber)}
+.ev-pick.have.sel{border-color:var(--amber);background:rgba(240,192,64,.08)}
+.ev-pick-icon{font-size:24px;margin-bottom:8px}
+.ev-pick-name{font-size:11px;color:var(--muted);letter-spacing:1px;line-height:1.4}
+.accuse-nav{display:flex;gap:12px;margin-top:18px;align-items:center}
+.sel-count{font-size:13px;color:var(--muted);flex:1}
+
+/* Verdict */
+#s-verdict{background:var(--bg);overflow:hidden;flex-direction:column}
+.verdict-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--ink);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px}
+.verdict-nav-center{font-family:'Special Elite',cursive;font-size:13px;color:var(--dim);letter-spacing:4px;text-align:center;flex:1}
+.verdict-scroll{flex:1;overflow-y:auto;padding:36px 40px;display:flex;flex-direction:column;align-items:center;gap:0}
+.verdict-box{background:var(--ink);border:1px solid var(--border);width:660px;max-width:100%;padding:38px 48px;text-align:center;position:relative;flex-shrink:0}
+.verdict-stamp{font-family:'Special Elite',cursive;font-size:48px;letter-spacing:6px;border:4px solid;padding:8px 18px;display:inline-block;transform:rotate(-12deg);margin-bottom:22px;animation:stampIn .5s cubic-bezier(.25,.46,.45,.94)}
+@keyframes stampIn{from{transform:rotate(-12deg) scale(2.5);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:.85}}
+.verdict-stamp.correct{color:#1aad00;border-color:#1aad00;text-shadow:0 0 20px rgba(26,173,0,.4)}
+.verdict-stamp.wrong{color:var(--red);border-color:var(--red);text-shadow:0 0 20px rgba(193,57,43,.4)}
+.verdict-sub{font-size:14px;color:var(--muted);letter-spacing:1px;margin-bottom:20px}
+.verdict-story{background:var(--ghost);border:1px solid var(--border);padding:22px;text-align:left;margin-bottom:24px}
+.story-title{font-size:11px;color:var(--amber);letter-spacing:3px;margin-bottom:12px}
+.story-text{font-size:13px;color:var(--muted);line-height:1.9}
+.rank-box{border:2px solid var(--amber);padding:14px 28px;display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:18px;background:rgba(240,192,64,.04)}
+.rank-lbl{font-size:10px;color:var(--dim);letter-spacing:4px}
+.rank-val{font-family:'Special Elite',cursive;font-size:30px;color:var(--amber);letter-spacing:4px}
+.rank-note{font-size:11px;color:var(--muted)}
+.v-stats{display:flex;gap:32px;justify-content:center;margin-bottom:22px}
+.vstat-v{font-family:'Playfair Display',serif;font-size:24px;color:var(--cream)}
+.vstat-l{font-size:11px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+.v-btns{display:flex;gap:14px;justify-content:center}
+
+/* Buttons */
+.btn{padding:12px 30px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:3px;border:1px solid;transition:all .2s}
+.btn-red{background:var(--red);border-color:var(--red);color:var(--cream)}
+.btn-red:hover{background:#a02820;border-color:#a02820}
+.btn-outline{background:transparent;border-color:var(--dim);color:var(--muted)}
+.btn-outline:hover{border-color:var(--cream);color:var(--cream)}
+.btn-amber{background:transparent;border-color:var(--amber);color:var(--amber)}
+.btn-amber:hover{background:rgba(240,192,64,.1)}
+.btn:disabled{opacity:.35}
+
+/* Toast */
+#toasts{position:fixed;top:18px;right:18px;z-index:9000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;font-size:13px;letter-spacing:1px;border:1px solid;max-width:340px;animation:toastIn .3s;font-family:'Courier Prime',monospace;line-height:1.5}
+@keyframes toastIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.toast.info{background:var(--ink);border-color:var(--border);color:var(--cream)}
+.toast.ok{background:rgba(74,222,128,.06);border-color:var(--green);color:var(--green)}
+.toast.err{background:rgba(193,57,43,.08);border-color:var(--red);color:var(--red)}
+.toast.warn{background:rgba(240,192,64,.06);border-color:var(--amber);color:var(--amber)}
+
+/* API key modal */
+#m-key{width:480px}
+.key-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cream);font-family:'Courier Prime',monospace;font-size:13px;padding:12px;outline:none;margin-bottom:10px}
+.key-input:focus{border-color:var(--amber)}
+.key-note{font-size:11px;color:var(--dim);line-height:1.8;margin-bottom:18px}
+
+/* Scrollbars */
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+
+/* Hint charge dots */
+.hint-dots{font-size:11px;margin-left:4px;color:var(--amber)}
+
+/* ── HELP MODAL ── */
+#m-help{width:700px}
+.help-intro{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px;padding:14px 18px;background:var(--ghost);border-left:3px solid var(--amber)}
+.help-section{margin-bottom:26px}
+.help-section-title{font-size:12px;color:var(--amber);letter-spacing:4px;margin-bottom:16px;border-bottom:1px solid rgba(240,192,64,.2);padding-bottom:8px}
+.help-steps{display:flex;flex-direction:column;gap:12px}
+.help-step{display:flex;gap:14px;align-items:flex-start}
+.help-step-num{width:30px;height:30px;border-radius:50%;border:1px solid var(--amber);color:var(--amber);font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.help-step-body{flex:1}
+.help-step-title{font-size:14px;color:var(--cream);margin-bottom:4px}
+.help-step-desc{font-size:13px;color:var(--muted);line-height:1.7}
+.help-tips{display:flex;flex-direction:column;gap:8px}
+.help-tip{background:rgba(74,222,128,.05);border-left:3px solid var(--green);padding:10px 14px;font-size:13px;color:var(--muted);line-height:1.6}
+.help-tip strong{color:var(--green)}
+.help-ranks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.help-rank{padding:10px 14px;border:1px solid var(--border);font-size:12px;color:var(--muted)}
+.help-rank strong{color:var(--amber);display:block;margin-bottom:2px;font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- cursor -->
+<div id="cur"><div class="ch h"></div><div class="ch v"></div><div class="ring"></div><div class="dot"></div></div>
+
+<!-- overlays -->
+<canvas id="canvas-bg"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+<div class="grain"></div>
+<div id="toasts"></div>
+
+<!-- ══ BOOT ══════════════════════════════════════ -->
+<div id="s-boot" class="screen active">
+  <div class="cctv-top"><div class="rec-dot"></div><span class="rec-lbl">REC</span></div>
+  <div class="cctv-id">CAM-01 · ARCHIVE SYSTEM</div>
+  <div class="boot-logo">DETECTIVE<span style="color:var(--red)">.</span>PK</div>
+  <div class="boot-sub">PAKISTAN CRIMINAL INVESTIGATION BUREAU · CLASSIFIED ARCHIVE</div>
+  <div class="boot-lines" id="boot-lines"></div>
+</div>
+
+<!-- ══ ARCHIVE ═══════════════════════════════════ -->
+<div id="s-archive" class="screen">
+  <div class="arch-header">
+    <div class="arch-logo">DETECTIVE<span>.</span>PK</div>
+    <div class="arch-tagline">CLASSIFIED CASE FILES — PAKISTAN CRIMINAL INVESTIGATION BUREAU</div>
+    <div class="arch-divider"></div>
+  </div>
+  <div class="cases-row">
+
+    <div class="case-card" id="cc001" onclick="G.openCase('C001')">
+      <div class="case-num">CASE FILE 001</div>
+      <div class="case-title">The Insane Asylum</div>
+      <div class="case-victim">VICTIM: Dr. Faisal Mirza</div>
+      <div class="case-loc">Lahore Psychiatric Institute · 1987</div>
+      <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card" id="cc002" onclick="G.openCase('C002')">
+      <div class="case-num">CASE FILE 002</div>
+      <div class="case-title">The Hangman of DHA</div>
+      <div class="case-victim">VICTIM: Shahbaz Hussain</div>
+      <div class="case-loc">Defence Housing Authority · Lahore</div>
+      <div class="case-btn open">OPEN FILE</div>
+    </div>
+
+    <div class="case-card locked" id="cc003" onclick="G.lockedClick(this)">
+      <div class="case-num">CASE FILE 003</div>
+      <div class="case-title">The Midnight Biryani</div>
+      <div class="case-victim">VICTIM: [REDACTED]</div>
+      <div class="case-loc">Old City · Lahore</div>
+      <div class="case-btn locked-btn">🔒 LOCKED</div>
+      <div class="classified"><span>CLASSIFIED</span></div>
+    </div>
+
+  </div>
+  <div class="arch-footer">
+    <button onclick="G.showKeyModal()">⚙ API KEY</button>
+    <button onclick="openM('m-help')" style="border-color:rgba(74,222,128,.5);color:#4ade80">? HOW TO PLAY</button>
+    POWERED BY CLAUDE SONNET 4.6 · ALL CASES CLASSIFIED
+  </div>
+</div>
+
+<!-- ══ BRIEFING ══════════════════════════════════ -->
+<div id="s-brief" class="screen">
+  <div class="brief-tape" id="brief-tape">CASE FILE — CONFIDENTIAL</div>
+  <div class="brief-body">
+    <div class="brief-col">
+      <div class="brief-tag" id="brief-tag"></div>
+      <div class="brief-title" id="brief-title"></div>
+      <div class="brief-victim" id="brief-victim"></div>
+      <div class="brief-body-text" id="brief-text"></div>
+      <div class="sec-head">EVIDENCE TO LOCATE</div>
+      <div class="brief-list" id="brief-ev"></div>
+    </div>
+    <div class="brief-col">
+      <div class="sec-head">PERSONS OF INTEREST</div>
+      <div class="brief-list" id="brief-sus"></div>
+      <div style="margin-top:24px">
+        <div class="sec-head">HOW TO SOLVE THIS CASE</div>
+        <div style="font-size:14px;color:var(--muted);line-height:2.2">
+          <span style="color:var(--red)">①</span> <strong style="color:var(--cream)">Crime Scene</strong> tab — click glowing circles to collect all 6 clues.<br>
+          <span style="color:var(--amber)">②</span> <strong style="color:var(--cream)">Suspects</strong> tab — interrogate everyone with questions.<br>
+          <span style="color:var(--amber)">③</span> <strong style="color:var(--amber)">Present evidence</strong> in interrogation to expose contradictions.<br>
+          <span style="color:var(--green)">④</span> Press <strong style="color:var(--red)">MAKE ARREST</strong> once you have 3+ clues.
+        </div>
+        <div style="margin-top:14px;font-size:12px;color:var(--dim);border:1px solid var(--border);padding:10px 14px;line-height:1.8">
+          💡 Stuck? Use the <strong style="color:var(--amber)">HINT</strong> button — you have 3 available.<br>
+          📖 Press <strong style="color:var(--green)">? HOW TO PLAY</strong> anytime for full rules.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brief-actions">
+    <button class="btn btn-red" onclick="G.beginInv()">BEGIN INVESTIGATION</button>
+    <button class="btn btn-outline" onclick="G.showArchive()">← CASE FILES</button>
+  </div>
+</div>
+
+<!-- ══ INVESTIGATION ══════════════════════════════ -->
+<div id="s-inv" class="screen">
+  <div class="inv-hud">
+    <button class="btn btn-outline" style="padding:5px 12px;font-size:11px;letter-spacing:2px" onclick="G.showArchive()">← FILES</button>
+    <span class="hud-case" id="hud-caseid"></span>
+    <span class="hud-sep">|</span>
+    <span class="hud-title" id="hud-title"></span>
+    <div class="hud-stat">⏱ <b id="hud-timer">00:00</b></div>
+    <div class="hud-stat">🔍 CLUES <b id="hud-clues">0/6</b></div>
+    <button class="hud-btn help" onclick="openM('m-help')">? HELP</button>
+    <button class="hud-btn hint" id="btn-hint" onclick="G.useHint()">HINT <span class="hint-dots" id="hint-dots">●●●</span></button>
+    <button class="hud-btn accuse" id="btn-accuse" onclick="G.openAccuse()" disabled>MAKE ARREST</button>
+  </div>
+  <div class="inv-tabs">
+    <div class="tab active" onclick="G.switchTab('scene',this)">CRIME SCENE</div>
+    <div class="tab" onclick="G.switchTab('evidence',this)">EVIDENCE LOCKER</div>
+    <div class="tab" onclick="G.switchTab('suspects',this)">SUSPECTS</div>
+    <div class="tab" onclick="G.switchTab('board',this)">DEDUCTION BOARD</div>
+  </div>
+  <div class="inv-content">
+
+    <div class="tab-panel active" id="tp-scene">
+      <div class="scene-wrap">
+        <div class="scene-meta">
+          <div class="room-label" id="room-label">CRIME SCENE</div>
+          <div class="room-found" id="room-found">0 / 6 CLUES FOUND</div>
+        </div>
+        <div class="scene-room" id="scene-room"></div>
+        <div class="scene-tip">Click the glowing red circles to examine evidence — collect all 6 to unlock the arrest</div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tp-evidence">
+      <div class="ev-grid" id="ev-grid"></div>
+    </div>
+
+    <div class="tab-panel" id="tp-suspects">
+      <div class="suspects-grid" id="sus-grid"></div>
+    </div>
+
+    <div class="tab-panel" id="tp-board">
+      <div class="board-wrap" id="board-wrap">
+        <svg id="board-svg"></svg>
+        <div class="board-tip">Drag cards to arrange · Click CONNECT then two cards to link them with string</div>
+        <div class="board-btns">
+          <button class="b-btn conn" id="btn-conn" onclick="Board.toggleConnect()">CONNECT</button>
+          <button class="b-btn clr" onclick="Board.clearStrings()">CLEAR</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ VERDICT ═══════════════════════════════════ -->
+<div id="s-verdict" class="screen">
+
+  <!-- ALWAYS-VISIBLE TOP BAR -->
+  <div class="verdict-nav">
+    <button class="btn btn-red" onclick="G.showArchive()" style="padding:9px 22px;font-size:12px">← BACK TO HOME</button>
+    <div class="verdict-nav-center">INVESTIGATION COMPLETE</div>
+    <button class="btn btn-outline" onclick="G.replayCase()" style="padding:9px 22px;font-size:12px">REPLAY CASE ↺</button>
+  </div>
+
+  <!-- SCROLLABLE RESULTS -->
+  <div class="verdict-scroll">
+    <div class="verdict-box">
+      <div class="verdict-stamp" id="v-stamp"></div>
+      <div class="verdict-sub" id="v-sub"></div>
+
+      <div class="v-stats" style="margin-bottom:24px">
+        <div><div class="vstat-v" id="vs-time"></div><div class="vstat-l">TIME TAKEN</div></div>
+        <div><div class="vstat-v" id="vs-clues"></div><div class="vstat-l">CLUES FOUND</div></div>
+        <div><div class="vstat-v" id="vs-hints"></div><div class="vstat-l">HINTS USED</div></div>
+      </div>
+
+      <div class="rank-box" style="margin-bottom:24px">
+        <div class="rank-lbl">YOUR DETECTIVE RANK</div>
+        <div class="rank-val" id="v-rank"></div>
+        <div class="rank-note" id="v-rank-note"></div>
+      </div>
+
+      <div class="verdict-story">
+        <div class="story-title">THE FULL STORY — WHAT REALLY HAPPENED</div>
+        <div class="story-text" id="v-story"></div>
+      </div>
+
+      <div style="display:flex;gap:14px;justify-content:center;margin-top:4px">
+        <button class="btn btn-red" onclick="G.showArchive()" style="font-size:12px">← BACK TO HOME</button>
+        <button class="btn btn-outline" onclick="G.replayCase()" style="font-size:12px">REPLAY THIS CASE ↺</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ MODALS ════════════════════════════════════ -->
+
+<div class="overlay" id="m-ev"><div class="modal" id="m-ev-box" style="width:540px">
+  <div class="modal-hd"><div class="modal-title" id="mev-title"></div><button class="modal-x" onclick="closeM('m-ev')">✕</button></div>
+  <div class="modal-body">
+    <div class="ev-inspect-tag" id="mev-tag"></div>
+    <div class="ev-inspect-desc" id="mev-desc"></div>
+    <div class="ev-inspect-analysis" id="mev-analysis"></div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-interr"><div class="modal" id="m-interr-box" style="width:760px;height:580px">
+  <div class="modal-hd"><div class="modal-title">INTERROGATION ROOM</div><button class="modal-x" onclick="closeM('m-interr')">✕</button></div>
+  <div class="modal-body" style="padding:0;overflow:hidden">
+    <div class="interr-body">
+      <div class="interr-side">
+        <div class="interr-portrait" id="i-portrait"></div>
+        <div class="interr-sname" id="i-name"></div>
+        <div class="interr-srole" id="i-role"></div>
+        <div class="stress-label">PSYCHOLOGICAL PRESSURE</div>
+        <div class="stress-bar-lg"><div class="stress-fill-lg" id="i-stress-fill" style="width:0%"></div></div>
+        <div class="stress-pct" id="i-stress-pct">0%</div>
+        <div class="ev-present-section">
+          <div class="ev-present-label">PRESENT EVIDENCE</div>
+          <div id="i-ev-pills"></div>
+          <div style="font-size:11px;color:var(--dim);margin-top:8px;line-height:1.6">Click evidence above to confront the suspect — may unlock new questions.</div>
+        </div>
+      </div>
+      <div class="interr-main">
+        <div class="chat" id="i-chat"></div>
+        <div class="q-section">
+          <div class="q-label">SELECT A QUESTION</div>
+          <div class="q-list" id="i-qlist"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-accuse"><div class="modal" style="width:760px">
+  <div class="modal-hd"><div class="modal-title">MAKE YOUR ARREST</div><button class="modal-x" onclick="closeM('m-accuse')">✕</button></div>
+  <div class="modal-body">
+    <div class="accuse-step active" id="acc-step1">
+      <div class="step-title">STEP 1 — WHO COMMITTED THE MURDER?</div>
+      <div class="accuse-suspects" id="acc-sus-grid"></div>
+    </div>
+    <div class="accuse-step" id="acc-step2">
+      <div class="step-title">STEP 2 — SELECT 3 KEY PIECES OF EVIDENCE</div>
+      <div class="ev-pick-grid" id="acc-ev-grid"></div>
+      <div class="accuse-nav">
+        <div class="sel-count" id="acc-sel-count">0 / 3 selected</div>
+        <button class="btn btn-outline" onclick="G.accStep(1)">← BACK</button>
+        <button class="btn btn-red" id="btn-arrest" onclick="G.makeArrest()" disabled>MAKE ARREST</button>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-help"><div class="modal" style="width:700px">
+  <div class="modal-hd"><div class="modal-title">How to Play DETECTIVE.PK</div><button class="modal-x" onclick="closeM('m-help')">✕</button></div>
+  <div class="modal-body">
+    <div class="help-intro">You are a detective investigating a murder. Gather evidence, interrogate suspects, and make your arrest before time runs out. Every clue matters — read carefully.</div>
+    <div class="help-section">
+      <div class="help-section-title">STEP-BY-STEP GUIDE</div>
+      <div class="help-steps">
+        <div class="help-step">
+          <div class="help-step-num">1</div>
+          <div class="help-step-body">
+            <div class="help-step-title">🔴 CRIME SCENE — Find all 6 clues</div>
+            <div class="help-step-desc">Click the red pulsing circles on the crime scene. Each one reveals a piece of evidence. Read the description AND the analysis — the analysis tells you what the clue means.</div>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step-num">2</div>
+          <div class="help-step-body">
+            <div class="help-step-title">📁 EVIDENCE LOCKER — Review what you found</div>
+            <div class="help-step-desc">All collected evidence appears here. Click any found card to re-read it. Evidence you haven't found yet is locked — go back to the crime scene.</div>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step-num">3</div>
+          <div class="help-step-body">
+            <div class="help-step-title">👤 SUSPECTS — Interrogate everyone</div>
+            <div class="help-step-desc">Click INTERROGATE on each suspect. Ask questions by clicking them. Some questions are locked — collect the required evidence first. Watch the Psychological Pressure meter rise as suspects get nervous. Use "PRESENT EVIDENCE" to confront them directly with clues.</div>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step-num">4</div>
+          <div class="help-step-body">
+            <div class="help-step-title">🔗 DEDUCTION BOARD — Connect the dots</div>
+            <div class="help-step-desc">Drag evidence and suspect cards around. Click CONNECT, then click two cards to draw a red string between them — linking a clue to the person it implicates.</div>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step-num">5</div>
+          <div class="help-step-body">
+            <div class="help-step-title">🚔 MAKE ARREST — When you're sure</div>
+            <div class="help-step-desc">Once you have at least 3 clues, the MAKE ARREST button activates. Pick your suspect, select 3 key pieces of evidence that prove their guilt, and confirm. You get one chance — choose wisely.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="help-section">
+      <div class="help-section-title">TIPS FOR SOLVING THE CASE</div>
+      <div class="help-tips">
+        <div class="help-tip"><strong>Read the analysis</strong> — each clue has a plain-English "what this means" section. Don't skip it.</div>
+        <div class="help-tip"><strong>High pressure = contradictions</strong> — when a suspect's meter is high, their answers start breaking down. Ask harder questions.</div>
+        <div class="help-tip"><strong>Present evidence during interrogation</strong> — the left panel lets you confront suspects with specific clues to unlock reactions.</div>
+        <div class="help-tip"><strong>Use HINTS sparingly</strong> — you only get 3. Each hint nudges you toward the key evidence path.</div>
+        <div class="help-tip"><strong>Alibis can be broken</strong> — every innocent suspect has a solid alibi. The guilty one has a flaw. Find it in the evidence.</div>
+      </div>
+    </div>
+    <div class="help-section">
+      <div class="help-section-title">DETECTIVE RANKS</div>
+      <div class="help-ranks">
+        <div class="help-rank"><strong>MASTER DETECTIVE</strong>Correct arrest, under 15 min, zero hints</div>
+        <div class="help-rank"><strong>INSPECTOR</strong>Correct arrest, under 30 min, 1 hint or fewer</div>
+        <div class="help-rank"><strong>DEPUTY INSPECTOR</strong>Correct arrest, under 50 min</div>
+        <div class="help-rank"><strong>ROOKIE</strong>Correct arrest — eventually</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<div class="overlay" id="m-key"><div class="modal" style="width:460px">
+  <div class="modal-hd"><div class="modal-title">Anthropic API Key</div><button class="modal-x" onclick="closeM('m-key')">✕</button></div>
+  <div class="modal-body">
+    <input class="key-input" id="key-input" type="password" placeholder="sk-ant-..." onkeydown="if(event.key==='Enter')G.saveKey()">
+    <div class="key-note">Stored locally in your browser. Sent only to Anthropic. Used for enhanced AI interrogation (optional — game works without it). Get yours at console.anthropic.com</div>
+    <div style="display:flex;gap:12px">
+      <button class="btn btn-amber" onclick="G.saveKey()">SAVE</button>
+      <button class="btn btn-outline" onclick="closeM('m-key')">CANCEL</button>
+    </div>
+  </div>
+</div></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// GAME DATA
+// ══════════════════════════════════════════════════════
+const CASES = {
+C001:{
+  id:'C001',title:'The Insane Asylum',
+  victim:'Dr. Faisal Mirza',location:'Ward 7, Lahore Psychiatric Institute',
+  killerId:'ayesha',
+  method:'Chlorpromazine overdose dissolved in evening chai',
+  briefText:`November 14th, 1987. Dr. Faisal Mirza — head psychiatrist of the Lahore Psychiatric Institute — was found dead at his desk at 6:12 AM by night orderly Rana Sajid. The post-mortem confirms a lethal dose of chlorpromazine dissolved in his chai. The Institute's locked-wing policy means only credentialed staff could access Ward 7 after 11 PM. Someone with both access and pharmaceutical knowledge committed this murder.`,
+  story:`Nurse Ayesha Raza had been systematically diverting chlorpromazine from the Ward 7 pharmacy for eight months — selling the medication through a contact in Anarkali Bazaar. Dr. Mirza discovered the discrepancies during a routine audit and confronted her privately on the night of November 13th, informing her he would submit a report to the Punjab Health Department the following morning. That same evening, Ayesha dissolved a lethal dose of chlorpromazine into Dr. Mirza's nightly chai — which she personally prepared, as was her custom. She then accessed the CCTV control room with her staff ID card and deleted the incriminating footage, before falsifying the medication log. She had nearly succeeded — until the Ward access terminal log, a separate system she had overlooked, showed her ID card entering the control room at 10:28 PM. The broken syringe in the staff bin, bearing her fingerprints, sealed her fate.`,
+  hotspots:[
+    {id:'e1',x:'62%',y:'42%',icon:'☕',label:"DR'S DESK",
+     name:'Chai Cup — Toxicology',tag:'FORENSIC',
+     desc:`Dr. Mirza's ceramic chai cup, recovered from his desk surface. Punjab Forensic Science Laboratory analysis confirms chlorpromazine at 400mg concentration — four times the lethal dose when consumed on an empty stomach. The drug was dissolved and odourless.`,
+     analysis:`The killer had pharmaceutical knowledge and access to controlled medication stock. Chlorpromazine is restricted to Ward 7's pharmacy dispensary. This was not an accident.`},
+    {id:'e2',x:'22%',y:'38%',icon:'🗄️',label:'MED CABINET',
+     name:'Medication Log — Altered Entries',tag:'DOCUMENT',
+     desc:`The Ward 7 dispensary log for November 13th shows three entries between 9–11 PM written over in a slightly different ink. When held to light, original entries are visible beneath. Nurse Ayesha Raza's initials appear at the bottom of the corrected section.`,
+     analysis:`The alterations hide an unexplained withdrawal of chlorpromazine from the pharmacy. Whoever altered this log had authority over the record — and something to hide from the audit Dr. Mirza was conducting.`},
+    {id:'e3',x:'18%',y:'20%',icon:'📹',label:'CCTV PANEL',
+     name:'CCTV Gap — 75 Minutes',tag:'SURVEILLANCE',
+     desc:`Control room records show a 75-minute gap in Ward 7 corridor footage (10:30 PM to 11:45 PM). The gap was triggered manually from the control room workstation using a standard override command.`,
+     analysis:`Someone with system access deliberately deleted this footage before entering Dr. Mirza's office. The timing corresponds precisely with the estimated time of death (10:45–11:30 PM per forensics).`},
+    {id:'e4',x:'78%',y:'22%',icon:'📓',label:"DOCTOR'S JACKET",
+     name:"Dr. Mirza's Diary — 'AR' Entry",tag:'DOCUMENT',
+     desc:`A leather diary recovered from the inside pocket of Dr. Mirza's jacket on the back of his chair. Entry dated November 12th: "I have confirmed it. The inventory has been falsified for 8 months. I confronted AR today. She denied everything. Tomorrow morning I submit my report. God help her."`,
+     analysis:`"AR" — Ayesha Raza. Dr. Mirza had directly confronted the killer 24 hours before his murder. She knew she would be criminally exposed the following morning. This is motive.`},
+    {id:'e5',x:'18%',y:'70%',icon:'💉',label:'RESTROOM BIN',
+     name:'Broken Syringe — Fingerprints',tag:'PHYSICAL',
+     desc:`A broken Type-B syringe recovered from the staff restroom waste bin near Ward 7. Partial fingerprints on the barrel matched to Nurse Ayesha Raza. The barrel tests positive for trace chlorpromazine residue.`,
+     analysis:`Ayesha was extracting chlorpromazine from vials using syringes — this discarded one places her handling the poison. Her presence in the staff restroom bin near Ward 7 after her claimed departure contradicts her alibi.`},
+    {id:'e6',x:'70%',y:'72%',icon:'💻',label:'ACCESS TERMINAL',
+     name:'Ward Access Log — Ayesha Card Swipe',tag:'SURVEILLANCE',
+     desc:`The Ward access terminal system — a separate, standalone log from the CCTV — records that Nurse Ayesha Raza's ID card was used to access the CCTV control room at 10:28 PM on November 13th. This system cannot be remotely altered.`,
+     analysis:`Ayesha claimed she left at 10:45 PM after rounds. Her card was scanned at the control room at 10:28 PM — two minutes before the CCTV footage gap begins. This directly places her at the scene and contradicts her alibi.`}
+  ],
+  suspects:[
+    {id:'ayesha',name:'Nurse Ayesha Raza',role:'Head Nurse, Ward 7',initials:'AR',stress:15,guilty:true,
+     alibi:'Claims she completed evening rounds and left at 10:45 PM via the main gate.',
+     questions:[
+       {id:'q1',text:'When exactly did you leave the hospital that night?',
+        resp:`"I finished the evening medication rounds and signed out at 10:45 PM. You can check the gate register yourself." She holds eye contact a half-second too long.`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'Who prepared Dr. Mirza\'s evening chai — was that routine?',
+        resp:`"I prepare chai for the senior consultants every evening. It is part of my duties. That night was no different from any other." A small pause before the last sentence.`,stressAdd:10,always:true,asked:false},
+       {id:'q3',text:'Dr. Mirza confronted you the night before about missing medication stock.',
+        resp:`"He had some questions about inventory figures. An administrative matter — I told him I would look into clerical errors." Pause. "There was no argument."`,stressAdd:22,needsEv:'e4',asked:false},
+       {id:'q4',text:'Your ID card accessed the CCTV control room at 10:28 PM. You said you left at 10:45.',
+        resp:`"The terminal must have misread my card. Those old systems make errors constantly. I was in the — " She stops. Starts again. "I was doing my rounds."`,stressAdd:38,needsEv:'e6',asked:false},
+       {id:'q5',text:'We found a syringe with your fingerprints and chlorpromazine residue in the staff bin.',
+        resp:`A long silence. When she speaks, her voice is careful and measured: "I handle medication daily. A syringe with my prints proves I do my job. Nothing more." Her jaw is tight.`,stressAdd:42,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"The chai cup? I prepare chai for Dr. Mirza every evening — of course my prints are on things in his office."`,
+       e2:`"Those corrections are clerical amendments — I flagged the errors to administration myself." A pause. "I think I should have a lawyer present for this conversation."`,
+       e3:`"A footage gap means the cameras malfunctioned. These systems break down constantly. That is not my responsibility."`,
+       e4:`"Where did you — " Her eyes fix on the diary. A long beat. "He misunderstood the inventory situation entirely. He was going to embarrass himself."`,
+       e5:`She looks at the syringe for several seconds. "I want to speak to a lawyer. This interview is over." Her hands are still.`,
+       e6:`"That terminal is — the access logs for that system are unreliable. I want that on record." Her voice rises slightly. "This is a technical error."`
+     }
+    },
+    {id:'omar',name:'Dr. Omar Butt',role:'Associate Psychiatrist',initials:'OB',stress:10,guilty:false,
+     alibi:'Was home with wife Sana all evening — confirmed by three witnesses.',
+     questions:[
+       {id:'q1',text:'Where were you on the night of November 13th?',
+        resp:`"Home with my wife. We had dinner with her parents. You are welcome to verify that with any of them." He seems mildly inconvenienced.`,stressAdd:3,always:true,asked:false},
+       {id:'q2',text:'Did you have disagreements with Dr. Mirza about his methods?',
+        resp:`"Professional disagreements, yes. His over-reliance on sedatives was archaic. I have said so openly. That is not motive — that is medicine." He straightens his collar.`,stressAdd:6,always:true,asked:false},
+       {id:'q3',text:'Who would have had access to the pharmacy\'s chlorpromazine stock?',
+        resp:`"Ward nurses manage the dispensary log. The head nurse — Ayesha Raza — signs off on every withdrawal. If there are discrepancies, that is where I would look."`,stressAdd:4,always:true,asked:false},
+       {id:'q4',text:'Did you notice anything unusual about Nurse Ayesha\'s behaviour recently?',
+        resp:`"She was... tense. Defensive when I asked about a patient's dosage being lower than prescribed. I thought nothing of it at the time. Now I am not so sure."`,stressAdd:5,needsEv:'e2',asked:false}
+     ],
+     evReactions:{
+       e1:`"Chlorpromazine. Available in our pharmacy. The dose required would need to be drawn from stock — the dispensary log would show any unexplained withdrawal."`,
+       e2:`"May I see that?" He examines it carefully. "That correction is in a different pen. Someone wrote over the original entry. This should be sent to a handwriting analyst."`,
+       e3:`"Whoever deleted that footage knew the system. The control room requires a staff ID to access. Check the access logs — they run on a separate system."`,
+       e4:`"He was going to report someone? That explains the conversation I overheard three days ago. Raised voices in his office, then silence."`,
+       e5:`"Fingerprints and chlorpromazine on the same syringe. That is not nothing. That connects someone directly to the poison used."`,
+       e6:`"That is the access terminal — it cannot be remotely altered. If her card was scanned there, she was there. No question."`
+     }
+    },
+    {id:'rana',name:'Rana Sajid',role:'Night Orderly',initials:'RS',stress:28,guilty:false,
+     alibi:'Was on duty rounds in Ward 5 all night — verified by shift log.',
+     questions:[
+       {id:'q1',text:'Walk me through finding the body this morning.',
+        resp:`"I went to bring his morning chai at 6. The door was — not fully closed. I knocked, then pushed it open. He was at his desk. I could tell immediately. I ran to the phone." He is looking at the floor.`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'Did you see anyone in Ward 7 during your rounds last night?',
+        resp:`"I was in Ward 5 all night. But — " He hesitates. "Around 11:30 when I went to get tea, I saw a light still on in the staff room near Ward 7. It is usually dark by 11."`,stressAdd:15,always:true,asked:false},
+       {id:'q3',text:'Were there any tensions among the staff recently?',
+        resp:`"Nurse Ayesha and Dr. Mirza sahib were — there was something. He called her to his office two days ago. She came out looking pale. I didn't ask." He wrings his hands.`,stressAdd:10,always:true,asked:false},
+       {id:'q4',text:'Does Nurse Ayesha often stay late?',
+        resp:`"No. She always leaves on time. Very punctual. That is why the light surprised me. I thought maybe she'd forgotten something." He pauses. "Or maybe I shouldn't have left it at that."`,stressAdd:8,needsEv:'e3',asked:false}
+     ],
+     evReactions:{
+       e1:`"Chai... she made his chai every night without fail. Brought it herself. Said it was a mark of respect for senior staff."`,
+       e2:`"I saw her near the cabinet room twice this week late at night. I assumed she was double-checking something. The nurses do that sometimes."`,
+       e3:`"The cameras went dark? Around that time I saw the light in the staff room. I should have — I'm sorry, I should have reported it."`,
+       e4:`"He kept a diary. I saw him writing in it sometimes. I didn't know he wrote — is that why she —" He cannot finish the sentence.`,
+       e5:`"The restroom bin near Ward 7. That bin is only used by Ward 7 staff. I empty it on the morning shift."`,
+       e6:`"Her card at 10:28. That means she was not doing rounds. Her rounds end by 10:15. Where was she between 10:15 and 10:28?"`
+     }
+    },
+    {id:'farooq',name:'Farooq Ahmed',role:'Voluntary Patient, Ward 3',initials:'FA',stress:32,guilty:false,
+     alibi:'In locked Ward 3 all night — confirmed by night nurse on duty.',
+     questions:[
+       {id:'q1',text:'Were you in your room on the night of November 13th?',
+        resp:`"Where else? They lock the ward at 10. I don't have a key. Do you think I have a key?" He taps the table. "I've been asking for a different room. The ventilation —"`,stressAdd:6,always:true,asked:false},
+       {id:'q2',text:'Did you hear anything unusual that night?',
+        resp:`"Footsteps. Always footsteps. But that night — later, after midnight — a door. Heavy. Like the ward 7 connecting corridor. I know that sound. I've heard it many times." He lowers his voice.`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'What do you know about the medication situation at this institute?',
+        resp:`"They short the doses. I've tasted it — less each time. Someone is taking from the supply. I told Dr. Mirza six weeks ago." He looks up. "He took notes. He said he'd look into it."`,stressAdd:10,always:true,asked:false}
+     ],
+     evReactions:{
+       e1:`"Chai. Is that how they did it? They always use the chai. The orderlies, the nurses — everyone trusts the chai here. I never drink the chai."`,
+       e2:`"I told him the log was wrong. Six weeks ago I showed him my dosage receipts didn't match. He said 'I will handle this quietly.' He handled it too quietly, it seems."`,
+       e3:`"After midnight I heard silence where there should be noise. The cameras, when they're on, make a very faint hum. That night there was no hum from Ward 7."`,
+       e4:`"He kept records. Good. Good that he kept records. Someone didn't want those records seen, did they."`,
+       e5:`"They use syringes to withdraw from vials, then record a different amount. The difference goes somewhere. I told him exactly this."`,
+       e6:`"The door I heard at midnight. Could have been someone using that terminal room. The door has a particular sound — reinforced. Unmistakable."`
+     }
+    }
+  ]
+},
+
+C002:{
+  id:'C002',title:'The Hangman of DHA',
+  victim:'Shahbaz Hussain',location:'Phase 5 Villa, DHA Lahore',
+  killerId:'imran',
+  method:'Rohypnol poisoning followed by staged hanging',
+  briefText:`March 3rd. Shahbaz Hussain, co-founder of Hussain-Siddiqui Properties, was found hanging in his study at 7:30 AM by the household maid. Police initially ruled it suicide. A forensic officer flagged atypical bruising inconsistent with self-hanging; toxicology later confirmed Rohypnol (flunitrazepam) in the bloodstream. Someone drugged Shahbaz and staged the scene. The villa's security system has a suspicious 30-minute gap.`,
+  story:`Imran Siddiqui and Shahbaz Hussain co-owned Lahore's third-largest real estate developer. Shahbaz had discovered Imran had been siphoning funds through a Dubai shell company and chose not to expose him publicly — instead offering a forced buyout at a fraction of the company's true value. Imran's lawyers confirmed he had no legal recourse. Facing financial ruin and public humiliation, Imran chose murder. He used his personal key to Shahbaz's villa under the pretense of an evening meeting, slipped Rohypnol into Shahbaz's whisky while they drank together, waited until he lost consciousness, then staged the hanging. He used the shared security override code to erase the driveway footage — but forgot that Constable Tariq, who had accepted a bribe to look away, had already logged his vehicle in the manual guard book. The second wiped whisky glass and the buyout contract locked the case.`,
+  hotspots:[
+    {id:'e1',x:'50%',y:'25%',icon:'⚰️',label:'HANGING POINT',
+     name:'Autopsy Report — Rohypnol',tag:'FORENSIC',
+     desc:`Official autopsy from Lahore Services Hospital. Cause of death: asphyxiation. Critical notation: petechial hemorrhaging pattern is atypical for self-suspension, more consistent with ligature applied post-unconsciousness. Blood toxicology: 0.8mg/L flunitrazepam (Rohypnol) — a sedative not prescribed to the deceased.`,
+     analysis:`Shahbaz was drugged before being hanged. He could not have tied the noose himself. The killer was physically present for 20–40 minutes while the drug took effect. This is premeditated homicide, not suicide.`},
+    {id:'e2',x:'20%',y:'55%',icon:'🥃',label:'DRINKS TROLLEY',
+     name:'Whisky Glass — Rohypnol Trace',tag:'TOXICOLOGY',
+     desc:`A Waterford crystal whisky glass from Shahbaz's study tests positive for flunitrazepam residue. A second glass was found on the drinks trolley, wiped clean. Shahbaz's prints are on both the decanter and one glass. The second glass was deliberately cleaned.`,
+     analysis:`Two people were drinking together. The killer sat with Shahbaz and poisoned his drink from within the room. This was someone Shahbaz trusted enough to receive at midnight — and the killer was methodical enough to wipe their own glass afterward.`},
+    {id:'e3',x:'72%',y:'20%',icon:'🖥️',label:'SECURITY PANEL',
+     name:'Security Footage Gap — Override Code',tag:'SURVEILLANCE',
+     desc:`DHA Phase 5 security system shows a 28-minute gap in the driveway camera footage (11:08–11:36 PM), triggered by a remote maintenance override. Per the system vendor, this override code was issued to only two people when the system was installed: Shahbaz Hussain and his business partner Imran Siddiqui.`,
+     analysis:`Imran had the code. He used it to erase footage of his arrival. However, the deletion itself is system-logged with a timestamp — proving someone remotely accessed it at 11:08 PM, minutes before a vehicle was logged entering the property.`},
+    {id:'e4',x:'65%',y:'60%',icon:'📄',label:'DOCUMENTS DESK',
+     name:'Buyout Contract — Forced Acquisition',tag:'DOCUMENT',
+     desc:`A draft buyout agreement from Hussain-Siddiqui Properties Ltd., dated February 28th — five days before the murder. Proposes Imran Siddiqui sell his 40% stake for Rs. 120 million against a Rs. 340 million market value. Margin note in Imran's handwriting: "This is theft. I will not sign."`,
+     analysis:`Clear financial motive. Shahbaz had evidence of Imran's Dubai shell company and used it as leverage. Imran's lawyers had confirmed no legal recourse. He was facing effective ruin within 30 days. The note confirms his state of mind.`},
+    {id:'e5',x:'30%',y:'78%',icon:'📒',label:'GATE HOUSE',
+     name:'Guard Entry Book — LHR-7712',tag:'DOCUMENT',
+     desc:`DHA Phase 5 gate guard logbook, page 47. Entry at 23:14 (11:14 PM): "Silver Land Cruiser — LHR-7712 — Imran Siddiqui sahib — Villa 21." No exit entry. Constable Tariq's signature. LHR-7712 is registered to Imran Siddiqui.`,
+     analysis:`Despite Imran's alibi claiming he was at his office all night, his vehicle was logged entering Shahbaz's DHA villa at 11:14 PM. No exit was recorded. This directly contradicts his alibi and places him at the scene during the murder window.`},
+    {id:'e6',x:'78%',y:'75%',icon:'📱',label:"SHAHBAZ'S PHONE",
+     name:"Last Call Log — Imran Siddiqui",tag:'COMMUNICATION',
+     desc:`Shahbaz Hussain's recovered mobile phone. Call log shows the last received call was from Imran Siddiqui at 11:02 PM on March 2nd, lasting 4 minutes and 18 seconds. No outgoing calls after 10 PM.`,
+     analysis:`Imran called Shahbaz at 11:02 PM — 12 minutes before his vehicle was logged at the gate. This was the call to arrange the late-night "meeting." Shahbaz opened his door willingly to someone he considered a business partner. He did not suspect danger.`}
+  ],
+  suspects:[
+    {id:'imran',name:'Imran Siddiqui',role:'Business Partner',initials:'IS',stress:12,guilty:true,
+     alibi:'Claims he was at his F-7 office until midnight, working alone.',
+     questions:[
+       {id:'q1',text:'Where were you on the night of March 2nd into the 3rd?',
+        resp:`"At my office on F-7 until midnight, then home. I was reviewing Q1 projections. Alone — it was late, the staff had left." He straightens his cufflinks. Composed.`,stressAdd:4,always:true,asked:false},
+       {id:'q2',text:'What was the state of your partnership with Shahbaz at the time of his death?',
+        resp:`"There were commercial tensions. A proposed restructuring that I disagreed with. These things happen in business partnerships." He is careful with every word.`,stressAdd:8,always:true,asked:false},
+       {id:'q3',text:'Your vehicle — LHR-7712 — was logged at Shahbaz\'s DHA gate at 11:14 PM.',
+        resp:`A pause. Measured. "The guard must have made an error. Or someone borrowed the vehicle. I was in F-7 all night. I can have my office security footage pulled." He does not break eye contact.`,stressAdd:30,needsEv:'e5',asked:false},
+       {id:'q4',text:'You and Shahbaz both had the DHA security override code. You used it at 11:08 PM.',
+        resp:`"I have no idea what you're referring to." Another pause, longer. "I think this conversation should continue with my lawyer present."`,stressAdd:42,needsEv:'e3',asked:false},
+       {id:'q5',text:'You called Shahbaz at 11:02 PM. His vehicle log puts you at his gate at 11:14.',
+        resp:`He says nothing for a full ten seconds. Then: "I want my lawyer. Now. This interview is over." He stands. His hands are very still.`,stressAdd:50,needsEv:'e6',asked:false}
+     ],
+     evReactions:{
+       e1:`"Rohypnol? I wouldn't know where to obtain — " He stops. A recalibration. "Clearly someone who wanted it to look like suicide. Not a clean job."`,
+       e2:`"Two glasses proves nothing except that Shahbaz had a guest. I was not that guest."`,
+       e3:`"The override code was Shahbaz's to manage. Perhaps he used it himself, or gave it to someone. I haven't used that code in months."`,
+       e4:`"That agreement was an opening offer. Business. Shahbaz and I would have reached a compromise." His voice is even. Practiced.`,
+       e5:`He looks at the logbook entry for a long moment. "Constable Tariq has made an error. I will be speaking to DHA management about the quality of their record-keeping."`,
+       e6:`"I called to discuss the agreement. We spoke briefly. That is all." He adjusts his watch. "A phone call is not a visit."`
+     }
+    },
+    {id:'meena',name:'Meena Hussain',role:'Wife of Victim',initials:'MH',stress:22,guilty:false,
+     alibi:'Was at her sister\'s home in Gulberg — confirmed by three family members.',
+     questions:[
+       {id:'q1',text:'Where were you on the night of March 2nd?',
+        resp:`"At my sister Sadia's home in Gulberg. We had dinner. I stayed the night." She is composed but red-eyed. "You can ask her. Ask her husband. Ask anyone."`,stressAdd:5,always:true,asked:false},
+       {id:'q2',text:'How was your marriage with Shahbaz recently?',
+        resp:`She hesitates. "We had our difficulties. Like any couple." She looks away. "I want you to find who did this. That is all I want."`,stressAdd:18,always:true,asked:false},
+       {id:'q3',text:'Did Shahbaz have enemies — business disputes, rivals?',
+        resp:`"Imran. He and Imran were — there was a serious conflict recently. Shahbaz was removing him from the company. Imran was furious. I heard them arguing by phone two weeks ago."`,stressAdd:10,always:true,asked:false},
+       {id:'q4',text:'Is there anything about your personal life we should know about?',
+        resp:`She looks down. A long pause. "I was seeing someone. For six months." Her voice is barely audible. "It has nothing to do with Shahbaz's death. Nothing. I was not in DHA that night."`,stressAdd:25,needsEv:'e4',asked:false}
+     ],
+     evReactions:{
+       e1:`"Rohypnol. Someone drugged him first. Whoever did this is a coward. Shahbaz could have defended himself." She looks genuinely devastated.`,
+       e2:`"He always offered guests a drink. Whoever sat with him that night was someone he trusted. Shahbaz didn't drink with strangers."`,
+       e3:`"Imran helped design that security system. He would have known the override code. Shahbaz told me once that Imran had his own copy."`,
+       e4:`"That contract — that's what this is about, isn't it. Imran was going to lose everything and he knew it. I told Shahbaz to be careful."`,
+       e5:`"Imran's car. Imran was there." She sits forward. "He was there and he let my husband die and made it look like — " She covers her face.`,
+       e6:`"Imran called that night? What time did he arrive — " She straightens. "You need to arrest Imran Siddiqui."`
+     }
+    },
+    {id:'tariq',name:'Constable Tariq',role:'DHA Security Guard',initials:'CT',stress:38,guilty:false,
+     alibi:'Was on duty at the gate all night — his own log confirms this.',
+     questions:[
+       {id:'q1',text:'Walk me through your shift on the night of March 2nd.',
+        resp:`"Routine. Nothing unusual." He says it too quickly. Looks at his hands. "I logged all vehicles as per procedure. All quiet."`,stressAdd:12,always:true,asked:false},
+       {id:'q2',text:'You logged Imran Siddiqui\'s vehicle entering at 11:14 PM but no exit.',
+        resp:`"...Yes. I — yes, I logged the entry." He shifts in his seat. "I may have missed the exit. It was late. It can be difficult to stay alert for twelve hours."`,stressAdd:20,always:true,asked:false},
+       {id:'q3',text:'Did anyone speak to you before or after Siddiqui entered the property?',
+        resp:`A long pause. He looks at the door, then back. "I was instructed to... not note certain things. I received a — a consideration. To be discreet." His voice drops to near-inaudible. "Rs. 25,000."`,stressAdd:40,needsEv:'e5',asked:false},
+       {id:'q4',text:'What time did Imran Siddiqui leave the property?',
+        resp:`"2:17 AM. I remember because the adhan for Fajr was approaching. I logged the entry but not the exit because of... I was scared. I'm telling you everything now. Please."`,stressAdd:30,needsEv:'e5',asked:false}
+     ],
+     evReactions:{
+       e1:`"Rohypnol. So it was planned. He came there to do it." He looks genuinely shaken. "I let him in. I took the money and I let him in."`,
+       e2:`"Siddiqui sahib arrived alone. No bags that I could see. He was in the property for nearly three hours."`,
+       e3:`"The security gap — he must have done that remotely, from inside the villa. He knew the code. Shahbaz sahib had told me once that Siddiqui helped install it."`,
+       e4:`"I don't know about business papers. He told me it was a late meeting. That Shahbaz sahib was expecting him." He swallows hard.`,
+       e5:`"That's my signature. I wrote it down because — because I knew, even then, something was wrong. God forgive me."`,
+       e6:`"He called from the car. I heard the phone ringing inside the villa about five minutes before he pulled up. Then Shahbaz sahib opened the door himself."`
+     }
+    },
+    {id:'rubina',name:'Rubina Bibi',role:'Household Maid',initials:'RB',stress:20,guilty:false,
+     alibi:'Was in the servants\' quarters at the rear of the property all night.',
+     questions:[
+       {id:'q1',text:'Tell me about finding the body this morning.',
+        resp:`"I came to open the house at 7:30 as always. The study door — it was not fully shut. I pushed it and — " She stops. "I screamed and ran outside. I screamed until the guard came."`,stressAdd:10,always:true,asked:false},
+       {id:'q2',text:'Did you hear or see anything unusual last night?',
+        resp:`"A car. Late. Very late — maybe midnight or after. I heard tyres on the driveway. We don't normally get guests that late. I thought maybe Shahbaz sahib had called for someone."`,stressAdd:12,always:true,asked:false},
+       {id:'q3',text:'Who has a key to the villa besides the family?',
+        resp:`"Imran sahib has a key. He and Shahbaz sahib were partners — he\'s visited many times. Meena Begum never liked him but she tolerated him." She pauses. "He had his own key."`,stressAdd:8,always:true,asked:false},
+       {id:'q4',text:'Was Shahbaz planning to dismiss you from service?',
+        resp:`"He — he mentioned it. Two weeks ago. Said the household was being reduced." She looks up. "I have eleven years here. Eleven years. But I would never — I loved this family."`,stressAdd:5,always:true,asked:false}
+     ],
+     evReactions:{
+       e1:`"He was drugged? So he didn't — he didn't do it himself. I knew. In my heart I knew. He was not a man who would leave like that."`,
+       e2:`"He used to offer guests a drink in that study. Whisky for the men. I was not allowed in when he had guests. He would ring for tea if needed."`,
+       e3:`"The cameras. The guard mentioned the cameras were down for a time. That's why no one saw."`,
+       e4:`"I overheard them on the phone two weeks ago. Shahbaz sahib was very firm. 'You take this offer or I take everything to the press.' Those were his words."`,
+       e5:`"Imran sahib's car. Silver. Very large. That's the car I heard last night." She clasps her hands. "It was him. I know it was him."`,
+       e6:`"He called that late? And then came himself? He planned it. He called to make sure Shahbaz sahib would open the door."`
+     }
+    }
+  ]
+}
+};
+
+// ══════════════════════════════════════════════════════
+// AUDIO ENGINE
+// ══════════════════════════════════════════════════════
+const Audio = {
+  ctx:null,rain:null,rainGain:null,muted:false,
+  init(){try{this.ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}},
+  tone(f,d,t='sine',v=.07){
+    if(!this.ctx||this.muted)return;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.connect(g);g.connect(this.ctx.destination);
+    o.type=t;o.frequency.value=f;
+    g.gain.setValueAtTime(v,this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+d);
+    o.start();o.stop(this.ctx.currentTime+d);
+  },
+  noise(d,v=.05){
+    if(!this.ctx)return;
+    const sr=this.ctx.sampleRate,buf=this.ctx.createBuffer(1,sr*d,sr),data=buf.getChannelData(0);
+    for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
+    const src=this.ctx.createBufferSource(),g=this.ctx.createGain();
+    src.buffer=buf;src.connect(g);g.connect(this.ctx.destination);
+    g.gain.setValueAtTime(v,this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,this.ctx.currentTime+d);
+    src.start();
+  },
+  click(){this.tone(500,.06,'square',.04)},
+  clue(){this.tone(440,.18);setTimeout(()=>this.tone(660,.3),110)},
+  type(){this.tone(180+Math.random()*60,.05,'square',.025)},
+  success(){[523,659,784].forEach((f,i)=>setTimeout(()=>this.tone(f,.4,'triangle',.1),i*90))},
+  fail(){[380,280,180].forEach((f,i)=>setTimeout(()=>this.tone(f,.4,'sawtooth',.08),i*110))},
+  drama(){[220,277,330].forEach(f=>this.tone(f,2,'sawtooth',.04))},
+  hint(){this.tone(330,.5,'triangle',.08)},
+  boot(){[700,900,1100].forEach((f,i)=>setTimeout(()=>this.tone(f,.1,'square',.05),i*70))},
+  stamp(){this.noise(.15,.15);setTimeout(()=>this.tone(80,.4,'sawtooth',.1),50)},
+  startRain(){
+    if(!this.ctx||this.rain)return;
+    const sr=this.ctx.sampleRate,buf=this.ctx.createBuffer(1,sr*4,sr),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    const src=this.ctx.createBufferSource();
+    src.buffer=buf;src.loop=true;
+    const f=this.ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=900;f.Q.value=.4;
+    this.rainGain=this.ctx.createGain();this.rainGain.gain.value=.035;
+    src.connect(f);f.connect(this.rainGain);this.rainGain.connect(this.ctx.destination);
+    src.start();this.rain=src;
+  },
+  toggleMute(){
+    this.muted=!this.muted;
+    if(this.rainGain)this.rainGain.gain.value=this.muted?0:.035;
+  }
+};
+
+// ══════════════════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════════════════
+const Particles={
+  canvas:null,ctx:null,pts:[],
+  init(){
+    this.canvas=document.getElementById('canvas-bg');
+    this.ctx=this.canvas.getContext('2d');
+    this.resize();
+    window.addEventListener('resize',()=>this.resize());
+    for(let i=0;i<22;i++)this.pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:.4+Math.random()*1.2,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.15-.04,a:.07+Math.random()*.3});
+    this.loop();
+  },
+  resize(){this.canvas.width=innerWidth;this.canvas.height=innerHeight},
+  loop(){
+    this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+    for(const p of this.pts){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=this.canvas.width;if(p.x>this.canvas.width)p.x=0;
+      if(p.y<0)p.y=this.canvas.height;if(p.y>this.canvas.height)p.y=0;
+      this.ctx.beginPath();this.ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      this.ctx.fillStyle=`rgba(232,226,212,${p.a})`;this.ctx.fill();
+    }
+    requestAnimationFrame(()=>this.loop());
+  }
+};
+
+// ══════════════════════════════════════════════════════
+// BOARD
+// ══════════════════════════════════════════════════════
+const Board={
+  wrap:null,svg:null,cards:new Map(),strings:[],connecting:false,first:null,drag:null,ox:0,oy:0,
+  init(){
+    this.wrap=document.getElementById('board-wrap');
+    this.svg=document.getElementById('board-svg');
+    document.addEventListener('mousemove',e=>this.mv(e));
+    document.addEventListener('mouseup',()=>this.up());
+  },
+  clear(){this.cards.forEach(c=>c.el.remove());this.cards.clear();this.strings=[];this.svg.innerHTML='';this.connecting=false;this.first=null;document.getElementById('btn-conn').classList.remove('on')},
+  add(item,type){
+    const el=document.createElement('div');el.className='b-card';
+    const bw=this.wrap.clientWidth,bh=this.wrap.clientHeight;
+    el.style.left=(80+Math.random()*(bw-200))+'px';
+    el.style.top=(60+Math.random()*(bh-200))+'px';
+    const photo=type==='ev'?`<div class="b-photo" style="font-size:26px">${item.icon||'🔍'}</div>`:`<div class="b-photo" style="font-family:'Playfair Display',serif;font-size:22px;color:var(--cream)">${item.initials}</div>`;
+    el.innerHTML=`<div class="b-pin"></div><div class="b-card-inner">${photo}<div class="b-caption">${item.name.substring(0,24)}</div></div>`;
+    el.addEventListener('mousedown',e=>{e.stopPropagation();if(this.connecting){this.handleConn(item.id);return}this.drag=item.id;this.ox=e.clientX-el.offsetLeft;this.oy=e.clientY-el.offsetTop;el.style.zIndex=20});
+    this.wrap.appendChild(el);
+    this.cards.set(item.id,{el});
+  },
+  mv(e){
+    if(!this.drag)return;
+    const c=this.cards.get(this.drag);if(!c)return;
+    const r=this.wrap.getBoundingClientRect();
+    c.el.style.left=Math.max(0,Math.min(e.clientX-this.ox-r.left,r.width-120))+'px';
+    c.el.style.top=Math.max(0,Math.min(e.clientY-this.oy-r.top,r.height-120))+'px';
+    this.draw();
+  },
+  up(){if(this.drag){const c=this.cards.get(this.drag);if(c)c.el.style.zIndex=3;this.drag=null}},
+  handleConn(id){
+    if(!this.first){this.first=id;const c=this.cards.get(id);if(c)c.el.classList.add('sel')}
+    else if(this.first!==id){
+      this.strings.push([this.first,id]);
+      const c=this.cards.get(this.first);if(c)c.el.classList.remove('sel');
+      this.first=null;this.draw();Audio.click();
+    }
+  },
+  toggleConnect(){this.connecting=!this.connecting;document.getElementById('btn-conn').classList.toggle('on',this.connecting);if(!this.connecting&&this.first){const c=this.cards.get(this.first);if(c)c.el.classList.remove('sel');this.first=null}},
+  clearStrings(){this.strings=[];this.draw()},
+  center(id){
+    const c=this.cards.get(id);if(!c)return null;
+    const r=this.wrap.getBoundingClientRect(),cr=c.el.getBoundingClientRect();
+    return{x:cr.left-r.left+cr.width/2,y:cr.top-r.top+cr.height/2};
+  },
+  draw(){
+    let p='';
+    for(const[a,b]of this.strings){
+      const ca=this.center(a),cb=this.center(b);if(!ca||!cb)continue;
+      const mx=(ca.x+cb.x)/2,my=(ca.y+cb.y)/2+28;
+      p+=`<path d="M${ca.x},${ca.y} Q${mx},${my} ${cb.x},${cb.y}" stroke="rgba(193,57,43,.75)" stroke-width="1.5" fill="none"/>`;
+    }
+    this.svg.innerHTML=p;
+  }
+};
+
+// ══════════════════════════════════════════════════════
+// GAME ENGINE
+// ══════════════════════════════════════════════════════
+const G={
+  cs:null, // current case state
+  apiKey:'',
+  accuseSus:null,
+
+  init(){
+    this.apiKey=localStorage.getItem('dpk_key')||'';
+    this.moveCursor();
+    Particles.init();
+    Board.init();
+    this.boot();
+  },
+
+  moveCursor(){
+    const cur=document.getElementById('cur');
+    document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+  },
+
+  boot(){
+    Audio.init();
+    const lines=['> DETECTIVE.PK SYSTEM v2.0','> PAKISTAN CRIMINAL INVESTIGATION BUREAU','> LOADING CLASSIFIED DATABASE...','> [████████████████] 100%','> 2 ACTIVE CASES — 1 CLASSIFIED','> AI INTERROGATION: STANDBY','> INITIALISING INTERFACE...'];
+    const el=document.getElementById('boot-lines');
+    let delay=500;
+    lines.forEach((l,i)=>{
+      setTimeout(()=>{
+        const d=document.createElement('div');d.className='bline';
+        d.style.animationDelay='0ms';
+        d.innerHTML=l+(i===lines.length-1?'<span class="bcursor"></span>':'');
+        el.appendChild(d);Audio.boot();
+      },delay);
+      delay+=260+Math.random()*80;
+    });
+    setTimeout(()=>this.show('s-archive'),delay+700);
+  },
+
+  show(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el=document.getElementById(id);el.classList.add('active');el.classList.add('enter');
+    el.addEventListener('animationend',()=>el.classList.remove('enter'),{once:true});
+  },
+
+  showArchive(){
+    if(this.cs?.timer){clearInterval(this.cs.timer);this.cs.timer=null}
+    Audio.click();this.show('s-archive');
+  },
+
+  lockedClick(card){
+    card.classList.add('shake');Audio.noise(.3,.06);
+    setTimeout(()=>card.classList.remove('shake'),420);
+    toast('Solve previous cases to unlock this file.','warn');
+  },
+
+  openCase(id){
+    Audio.click();
+    const c=CASES[id];if(!c)return;
+    this.cs={
+      caseId:id,case:c,
+      foundEvs:new Set(),
+      stresses:{},
+      askedQs:{},
+      hintsUsed:0,hintsLeft:3,
+      startTime:Date.now(),elapsed:0,timer:null
+    };
+    c.suspects.forEach(s=>{this.cs.stresses[s.id]=s.stress;this.cs.askedQs[s.id]=new Set()});
+    this.buildBriefing(c);this.show('s-brief');
+  },
+
+  buildBriefing(c){
+    document.getElementById('brief-tape').textContent=`CASE FILE ${c.id} — CONFIDENTIAL`;
+    document.getElementById('brief-tag').textContent=`CASE ${c.id}`;
+    document.getElementById('brief-title').textContent=c.title;
+    document.getElementById('brief-victim').textContent=`VICTIM: ${c.victim}`;
+    this.typewrite('brief-text',c.briefText,22);
+    document.getElementById('brief-ev').innerHTML=c.hotspots.map(h=>`<div class="brief-li">${h.name}</div>`).join('');
+    document.getElementById('brief-sus').innerHTML=c.suspects.map(s=>`<div class="brief-li"><div><div style="font-size:14px;color:var(--cream)">${s.name}</div><div style="font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:1px">${s.role}</div></div></div>`).join('');
+  },
+
+  async typewrite(elId,text,speed=28){
+    const el=document.getElementById(elId);el.innerHTML='<span class="brief-cursor"></span>';
+    let t='';
+    for(const ch of text){
+      t+=ch;el.innerHTML=t+'<span class="brief-cursor"></span>';
+      if(ch!==' ')Audio.type();
+      await sleep(ch==='.'||ch===','?speed*4:speed);
+    }
+    el.innerHTML=t;
+  },
+
+  beginInv(){
+    Audio.click();
+    const c=this.cs.case;
+    document.getElementById('hud-caseid').textContent=`CASE ${c.id}`;
+    document.getElementById('hud-title').textContent=c.title;
+    this.buildScene(c);
+    this.buildEvGrid(c);
+    this.buildSusGrid(c);
+    Board.clear();
+    c.hotspots.forEach(h=>Board.add({...h,name:h.name},'ev'));
+    c.suspects.forEach(s=>Board.add(s,'sus'));
+    this.updateHUD();
+    this.startTimer();
+    this.switchTab('scene',document.querySelector('.tab'));
+    this.show('s-inv');
+  },
+
+  buildScene(c){
+    const room=document.getElementById('scene-room');
+    document.getElementById('room-label').textContent=c.location.toUpperCase();
+    room.innerHTML='';
+
+    // Room furniture silhouettes — give visual context for each case
+    const decos={
+      C001:[
+        {s:'left:32%;top:20%;width:30%;height:26%',t:'DESK'},
+        {s:'left:4%;top:3%;width:7%;height:70%',t:'BOOKSHELF'},
+        {s:'left:45%;top:1%;width:22%;height:9%',t:'WINDOW'},
+        {s:'right:2%;top:5%;width:5%;height:48%',t:'DOOR'},
+        {s:'left:14%;top:18%;width:11%;height:28%',t:'MED CABINET'},
+        {s:'left:4%;top:76%;width:18%;height:18%',t:'STORAGE'},
+        {s:'left:58%;top:65%;width:18%;height:22%',t:'WORKSTATION'},
+      ],
+      C002:[
+        {s:'left:30%;top:12%;width:32%;height:28%',t:'DESK'},
+        {s:'right:2%;top:3%;width:6%;height:65%',t:'BOOKCASE'},
+        {s:'left:2%;top:3%;width:24%;height:8%',t:'WINDOW'},
+        {s:'left:2%;top:38%;width:5%;height:48%',t:'DOOR'},
+        {s:'left:12%;top:12%;width:14%;height:22%',t:'CABINET'},
+        {s:'left:60%;top:70%;width:22%;height:18%',t:'DRINKS TROLLEY'},
+      ]
+    };
+    // Floor line for perspective
+    const fl=document.createElement('div');fl.className='room-floor-line';room.appendChild(fl);
+    (decos[c.id]||[]).forEach(d=>{
+      const el=document.createElement('div');
+      el.className='room-deco';
+      el.style.cssText=d.s;
+      el.innerHTML=`<span style="position:absolute;bottom:4px;right:6px;font-size:8px;color:rgba(232,226,212,.22);letter-spacing:1px;font-family:'Courier Prime',monospace">${d.t}</span>`;
+      room.appendChild(el);
+    });
+
+    c.hotspots.forEach(h=>{
+      const el=document.createElement('div');
+      el.className='hotspot';el.id='hs-'+h.id;
+      el.style.left=h.x;el.style.top=h.y;
+      el.innerHTML=`<div class="hs-ring"></div><div class="hs-inner">${h.icon}</div><div class="hs-label">${h.label}</div>`;
+      el.addEventListener('click',()=>this.examineHotspot(h.id));
+      room.appendChild(el);
+    });
+    this.updateRoomFound();
+  },
+
+  examineHotspot(id){
+    const c=this.cs.case,h=c.hotspots.find(x=>x.id===id);if(!h)return;
+    const isNew=!this.cs.foundEvs.has(id);
+    if(isNew){
+      this.cs.foundEvs.add(id);
+      document.getElementById('hs-'+id)?.classList.add('found');
+      Audio.clue();
+      this.updateEvGrid();
+      this.updateHUD();
+      this.updateRoomFound();
+      toast(`CLUE FOUND: ${h.name}`,'ok');
+    }else Audio.click();
+    document.getElementById('mev-title').textContent=h.name;
+    document.getElementById('mev-tag').textContent=h.tag;
+    document.getElementById('mev-desc').textContent=h.desc;
+    document.getElementById('mev-analysis').textContent=h.analysis;
+    openM('m-ev');
+  },
+
+  updateRoomFound(){
+    const f=this.cs.foundEvs.size,t=this.cs.case.hotspots.length;
+    document.getElementById('room-found').textContent=`${f} / ${t} CLUES FOUND`;
+  },
+
+  buildEvGrid(c){
+    const grid=document.getElementById('ev-grid');
+    grid.innerHTML=c.hotspots.map(h=>`
+      <div class="ev-card${this.cs.foundEvs.has(h.id)?' found':''}" id="evc-${h.id}" onclick="G.examineHotspot('${h.id}')">
+        <div class="ev-icon">${h.icon}</div>
+        <div class="ev-name">${h.name}</div>
+        <div class="ev-tag">${h.tag}</div>
+      </div>`).join('');
+  },
+
+  updateEvGrid(){
+    const c=this.cs.case;
+    c.hotspots.forEach(h=>{
+      const card=document.getElementById('evc-'+h.id);
+      if(card&&this.cs.foundEvs.has(h.id))card.classList.add('found');
+    });
+  },
+
+  buildSusGrid(c){
+    document.getElementById('sus-grid').innerHTML=c.suspects.map(s=>`
+      <div class="sus-card${this.cs.askedQs[s.id]?.size>0?' interrogated':''}" id="susc-${s.id}">
+        <div class="sus-avatar">${s.initials}</div>
+        <div class="sus-name">${s.name}</div>
+        <div class="sus-role">${s.role}</div>
+        <div class="sus-alibi">${s.alibi}</div>
+        <div class="stress-bar"><div class="stress-fill" id="sfill-${s.id}" style="width:${this.cs.stresses[s.id]||0}%"></div></div>
+        <div style="font-size:11px;color:var(--muted);text-align:right;margin-bottom:10px">${this.cs.stresses[s.id]||0}% psychological pressure</div>
+        <button class="sus-btn" onclick="G.openInterr('${s.id}')">INTERROGATE</button>
+      </div>`).join('');
+  },
+
+  openInterr(sid){
+    const c=this.cs.case,s=c.suspects.find(x=>x.id===sid);if(!s)return;
+    Audio.click();
+    // Header
+    document.getElementById('i-portrait').textContent=s.initials;
+    document.getElementById('i-name').textContent=s.name;
+    document.getElementById('i-role').textContent=s.role;
+    this.updateInterrStress(sid);
+    // Chat
+    const chat=document.getElementById('i-chat');
+    chat.innerHTML=`<div class="msg sys">*${s.name} enters the interrogation room.*</div>`;
+    if(this.cs.stresses[sid]>60) chat.innerHTML+=`<div class="msg sys">*They look visibly uncomfortable under your gaze.*</div>`;
+    // Questions
+    this.buildQList(s);
+    // Evidence pills
+    const pills=document.getElementById('i-ev-pills');
+    const found=[...this.cs.foundEvs];
+    if(found.length===0){pills.innerHTML=`<div style="font-size:12px;color:var(--dim);line-height:1.6">No evidence collected yet.<br>Find clues in the Crime Scene tab first.</div>`}
+    else{pills.innerHTML=found.map(eid=>{
+      const h=c.hotspots.find(x=>x.id===eid);
+      return h?`<button class="ev-pill" onclick="G.presentEvidence('${sid}','${eid}')">${h.icon} ${h.name.substring(0,22)}</button>`:'';
+    }).join('')}
+    openM('m-interr');
+  },
+
+  buildQList(s){
+    const qlist=document.getElementById('i-qlist');
+    qlist.innerHTML=s.questions.map(q=>{
+      const unlocked=q.always||!q.needsEv||this.cs.foundEvs.has(q.needsEv);
+      const asked=this.cs.askedQs[s.id]?.has(q.id);
+      return `<button class="q-btn${asked?' asked':''}${!unlocked?' locked-q':''}"
+        onclick="G.askQuestion('${s.id}','${q.id}')"
+        ${!unlocked||asked?'disabled':''}>
+        ${q.text}${!unlocked?`<span class="q-locked-hint">[Need evidence]</span>`:''}
+      </button>`;
+    }).join('');
+  },
+
+  askQuestion(sid,qid){
+    const c=this.cs.case,s=c.suspects.find(x=>x.id===sid),q=s.questions.find(x=>x.id===qid);
+    if(!q)return;
+    Audio.click();
+    this.cs.askedQs[sid].add(qid);
+    this.cs.stresses[sid]=Math.min(100,this.cs.stresses[sid]+q.stressAdd);
+    this.updateInterrStress(sid);
+    const chat=document.getElementById('i-chat');
+    chat.innerHTML+=`<div class="msg det">${q.text}</div>`;
+    setTimeout(()=>{
+      chat.innerHTML+=`<div class="msg sus">${q.resp}</div>`;
+      chat.scrollTop=chat.scrollHeight;
+      // refresh q list
+      this.buildQList(s);
+      // update sus card stress
+      const fill=document.getElementById('sfill-'+sid);if(fill)fill.style.width=this.cs.stresses[sid]+'%';
+    },600);
+    chat.scrollTop=chat.scrollHeight;
+    // Mark as interrogated
+    document.getElementById('susc-'+sid)?.classList.add('interrogated');
+  },
+
+  presentEvidence(sid,eid){
+    const c=this.cs.case,s=c.suspects.find(x=>x.id===sid),h=c.hotspots.find(x=>x.id===eid);
+    if(!s||!h)return;
+    Audio.drama();
+    const reaction=s.evReactions[eid]||`"I don't see what that has to do with me." They hold your gaze steadily.`;
+    this.cs.stresses[sid]=Math.min(100,this.cs.stresses[sid]+15);
+    this.updateInterrStress(sid);
+    const chat=document.getElementById('i-chat');
+    chat.innerHTML+=`<div class="msg det">*PRESENTS: ${h.name}*</div>`;
+    setTimeout(()=>{
+      chat.innerHTML+=`<div class="msg sus">${reaction}</div>`;
+      chat.scrollTop=chat.scrollHeight;
+      const fill=document.getElementById('sfill-'+sid);if(fill)fill.style.width=this.cs.stresses[sid]+'%';
+    },700);
+    chat.scrollTop=chat.scrollHeight;
+  },
+
+  updateInterrStress(sid){
+    const v=this.cs.stresses[sid]||0;
+    document.getElementById('i-stress-fill').style.width=v+'%';
+    document.getElementById('i-stress-pct').textContent=v+'%';
+  },
+
+  switchTab(name,tabEl){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    if(tabEl)tabEl.classList.add('active');
+    document.getElementById('tp-'+name)?.classList.add('active');
+    if(name==='board')setTimeout(()=>Board.draw(),50);
+    Audio.click();
+  },
+
+  updateHUD(){
+    const found=this.cs.foundEvs.size,total=this.cs.case.hotspots.length;
+    document.getElementById('hud-clues').textContent=`${found}/${total}`;
+    const dots='●'.repeat(this.cs.hintsLeft)+'○'.repeat(3-this.cs.hintsLeft);
+    document.getElementById('hint-dots').textContent=dots;
+    document.getElementById('btn-hint').disabled=this.cs.hintsLeft<=0;
+    document.getElementById('btn-accuse').disabled=found<3;
+  },
+
+  startTimer(){
+    if(this.cs.timer)return;
+    this.cs.timer=setInterval(()=>{
+      this.cs.elapsed=Math.floor((Date.now()-this.cs.startTime)/1000);
+      const m=String(Math.floor(this.cs.elapsed/60)).padStart(2,'0');
+      const s=String(this.cs.elapsed%60).padStart(2,'0');
+      document.getElementById('hud-timer').textContent=`${m}:${s}`;
+    },1000);
+  },
+
+  useHint(){
+    if(!this.cs||this.cs.hintsLeft<=0)return;
+    const c=this.cs.case;
+    const hints={
+      C001:['The medication log has been altered — look at who controls those records.','The victim confronted someone the night before. Check his personal effects.','Physical evidence in the staff restroom links directly to the poison used.'],
+      C002:['Two people were drinking together that night. The killer wiped their own glass.','Only two people had the security override code. One of them is the victim.','A bribed guard and a vehicle log tell the same story — follow Imran\'s movements.']
+    };
+    const hint=(hints[c.id]||[])[this.cs.hintsUsed]||'Review all evidence carefully before making your arrest.';
+    this.cs.hintsUsed++;this.cs.hintsLeft--;
+    this.updateHUD();Audio.hint();
+    toast(`HINT: ${hint}`,'warn',6000);
+  },
+
+  openAccuse(){
+    if(this.cs.foundEvs.size<3){toast('Collect at least 3 clues before making an arrest.','warn');return}
+    Audio.drama();this.accuseSus=null;
+    this.accStep(1);
+    const c=this.cs.case;
+    document.getElementById('acc-sus-grid').innerHTML=c.suspects.map(s=>`
+      <div class="acc-sus" id="as-${s.id}" onclick="G.pickSuspect('${s.id}')">
+        <div class="acc-ava">${s.initials}</div>
+        <div class="acc-name">${s.name}</div>
+        <div class="acc-role">${s.role}</div>
+      </div>`).join('');
+    this.buildEvPicker();
+    openM('m-accuse');
+  },
+
+  pickSuspect(sid){
+    this.accuseSus=sid;
+    document.querySelectorAll('.acc-sus').forEach(el=>el.classList.remove('chosen'));
+    document.getElementById('as-'+sid)?.classList.add('chosen');
+    Audio.click();
+    setTimeout(()=>this.accStep(2),300);
+  },
+
+  accStep(n){
+    document.querySelectorAll('.accuse-step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('acc-step'+n)?.classList.add('active');
+  },
+
+  buildEvPicker(){
+    const c=this.cs.case;
+    document.getElementById('acc-ev-grid').innerHTML=c.hotspots.map(h=>{
+      const have=this.cs.foundEvs.has(h.id);
+      return `<div class="ev-pick${have?' have':''}" id="ep-${h.id}" onclick="G.pickEv('${h.id}')">
+        <div class="ev-pick-icon">${h.icon}</div>
+        <div class="ev-pick-name">${h.name}</div>
+      </div>`;
+    }).join('');
+    this.selEvs=new Set();this.updateAccNavn();
+  },
+
+  selEvs:new Set(),
+  pickEv(id){
+    if(!this.cs.foundEvs.has(id))return;
+    const el=document.getElementById('ep-'+id);
+    if(this.selEvs.has(id)){this.selEvs.delete(id);el.classList.remove('sel')}
+    else{if(this.selEvs.size>=3){toast('Select only 3 pieces of evidence.','warn');return}this.selEvs.add(id);el.classList.add('sel')}
+    Audio.click();this.updateAccNavn();
+  },
+
+  updateAccNavn(){
+    const n=this.selEvs.size;
+    document.getElementById('acc-sel-count').textContent=`${n} / 3 selected`;
+    document.getElementById('btn-arrest').disabled=n<3||!this.accuseSus;
+  },
+
+  makeArrest(){
+    if(!this.accuseSus||this.selEvs.size<3)return;
+    if(this.cs.timer){clearInterval(this.cs.timer);this.cs.timer=null}
+    closeM('m-accuse');
+    const correct=this.accuseSus===this.cs.case.killerId;
+    const c=this.cs.case;
+    const accused=c.suspects.find(s=>s.id===this.accuseSus);
+    const killer=c.suspects.find(s=>s.id===c.killerId);
+
+    setTimeout(()=>{
+      Audio.stamp();
+      const stamp=document.getElementById('v-stamp');
+      stamp.textContent=correct?'CASE CLOSED':'WRONGFUL ARREST';
+      stamp.className='verdict-stamp '+(correct?'correct':'wrong');
+      document.getElementById('v-sub').textContent=correct
+        ?`You correctly identified ${accused.name} as the killer.`
+        :`You accused ${accused.name}. The real killer was ${killer.name}.`;
+      document.getElementById('v-story').textContent=c.story;
+      const rank=this.getRank(correct);
+      document.getElementById('v-rank').textContent=rank.title;
+      document.getElementById('v-rank-note').textContent=rank.note;
+      const secs=this.cs.elapsed;
+      document.getElementById('vs-time').textContent=`${String(Math.floor(secs/60)).padStart(2,'0')}:${String(secs%60).padStart(2,'0')}`;
+      document.getElementById('vs-clues').textContent=`${this.cs.foundEvs.size}/6`;
+      document.getElementById('vs-hints').textContent=this.cs.hintsUsed;
+      this.show('s-verdict');
+      setTimeout(()=>correct?Audio.success():Audio.fail(),400);
+    },200);
+  },
+
+  getRank(correct){
+    if(!correct)return{title:'CONSTABLE',note:'Wrong arrest. Re-examine the evidence.'};
+    const s=this.cs.elapsed,h=this.cs.hintsUsed;
+    if(s<900&&h===0)return{title:'MASTER DETECTIVE',note:'Perfect case. No hints, under 15 minutes.'};
+    if(s<1800&&h<=1)return{title:'INSPECTOR',note:'Excellent detective work.'};
+    if(s<3000)return{title:'DEPUTY INSPECTOR',note:'Solid investigation.'};
+    return{title:'ROOKIE',note:'Case closed — eventually.'};
+  },
+
+  replayCase(){const id=this.cs?.caseId;if(id)this.openCase(id)},
+
+  showKeyModal(){
+    document.getElementById('key-input').value=this.apiKey;
+    openM('m-key');
+  },
+
+  saveKey(){
+    const k=document.getElementById('key-input').value.trim();
+    if(k&&!k.startsWith('sk-ant-')){toast('Invalid key — should start with sk-ant-','err');return}
+    this.apiKey=k;
+    localStorage.setItem('dpk_key',k);
+    closeM('m-key');
+    toast(k?'API key saved.':'Key cleared.','ok');
+  }
+};
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function openM(id){document.getElementById(id).classList.add('open')}
+function closeM(id){document.getElementById(id).classList.remove('open');Audio.click()}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function toast(msg,type='info',dur=3200){
+  const c=document.getElementById('toasts'),t=document.createElement('div');
+  t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(()=>t.remove(),420)},dur);
+}
+
+// grain background
+document.querySelector('.grain').style.backgroundImage="url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='1'/></svg>\")";
+
+window.addEventListener('DOMContentLoaded',()=>{
+  G.init();
+  setTimeout(()=>Audio.startRain(),3000);
+});
+</script>
+</body>
+</html>
